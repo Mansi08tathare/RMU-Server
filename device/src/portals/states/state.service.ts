@@ -4,6 +4,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CommonService } from '../../device/services/common-service';
 import { CONSTANT_MSG } from 'src/common-dto/const';
+import { Device } from 'src/device/entities/device.entity';
+import { DeleteResult } from 'typeorm';
+
 
 @Injectable()
 export class StateService {
@@ -11,6 +14,8 @@ export class StateService {
     @InjectRepository(State)
     private readonly stateRepository: Repository<State>,
     private readonly commonService: CommonService,
+    @InjectRepository(Device)
+    private readonly deviceRepository:Repository<Device>
   ) {
     // this.updateState({ id: 10, name: 'gujarat', url: '', sid: '' });
    // this.getStateById(10)
@@ -282,9 +287,20 @@ export class StateService {
     }
   }
 
+  /////..........not to use
   async deleteState(ref_id){
     try{
-     let resp = await this.stateRepository.delete(ref_id)
+      const deleteDevicesResult:DeleteResult = await this.deviceRepository.delete({ state: { ref_id } });
+
+      if (deleteDevicesResult.affected === 0) {
+        // No related devices deleted
+        return this.commonService.errorMessage(
+          [],
+          CONSTANT_MSG.ERROR_WHILE_DELETING,
+          HttpStatus.BAD_REQUEST
+        );
+      }
+     let resp :DeleteResult = await this.stateRepository.delete(ref_id)
      console.log("resp",resp)
      if(!resp ){
         console.log("entr in if")
@@ -311,4 +327,67 @@ export class StateService {
 
     }
   }
+
+  // async deleteState(ref_id: number): Promise<any> {
+  //   try {
+  //     // Check if the state exists
+  //     const stateToDelete = await this.stateRepository.findOne(ref_id, { relations: ['devices'] });
+
+  //     if (!stateToDelete) {
+  //       return this.commonService.errorMessage(
+  //         [],
+  //         CONSTANT_MSG.STATE_NOT_FOUND,
+  //         HttpStatus.NOT_FOUND,
+  //       );
+  //     }
+
+  //     // Delete related devices first (assuming devices have a CASCADE DELETE constraint)
+  //     await this.deleteRelatedDevices(ref_id);
+
+  //     // Now, delete the state
+  //     const deleteStateResult: DeleteResult = await this.stateRepository.delete(ref_id);
+
+  //     if (deleteStateResult.affected === 0) {
+  //       return this.commonService.errorMessage(
+  //         [],
+  //         CONSTANT_MSG.ERROR_WHILE_DELETING,
+  //         HttpStatus.BAD_REQUEST,
+  //       );
+  //     }
+
+  //     return this.commonService.successMessage(
+  //       [],
+  //       CONSTANT_MSG.ID_DELETED_SUCCESSFULLY,
+  //       HttpStatus.NO_CONTENT,
+  //     );
+  //   } catch (err) {
+  //     console.log("Error in deleteState", err);
+  //     return this.commonService.errorMessage(
+  //       [],
+  //       CONSTANT_MSG.INTERNAL_SERVER_ERR,
+  //       HttpStatus.INTERNAL_SERVER_ERROR,
+  //     );
+  //   }
+  // }
+
+  // private async deleteRelatedDevices(stateId: number): Promise<void> {
+  //   // Assuming there's a relationship between State and Device entities
+  //   // and the onDelete is set to CASCADE in the entity configuration
+
+  //   // Retrieve related devices
+  //   const devicesToDelete = await this.stateRepository
+  //     .createQueryBuilder('state')
+  //     .leftJoinAndSelect('state.devices', 'device')
+  //     .where('state.ref_id = :stateId', { stateId })
+  //     .getOne();
+
+  //   // Delete each related device
+  //   if (devicesToDelete && devicesToDelete.devices) {
+  //     await Promise.all(
+  //       devicesToDelete.devices.map(async (device) => {
+  //         await this.stateRepository.manager.remove(device);
+  //       }),
+  //     );
+  //   }
+  // }
 }

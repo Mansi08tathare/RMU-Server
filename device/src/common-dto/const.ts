@@ -138,7 +138,12 @@ export const CONSTANT_MSG = {
     CONFIG_SAVED_SUCCESSFULLY:'config saved successfully',
     AGENCY_ADDED_SUCCESSFULLY:'agency added successfully',
     SUCCESSFULLY_UPDATED_AGENCY:'successfully updated agency',
-    SIM_AND_RID_ADDED_SUCCESSFULLY:'sim and rid added successfully'
+    SIM_AND_RID_ADDED_SUCCESSFULLY:'sim and rid added successfully',
+    CONTROLLER_SAVED_SUCESSFULLY:'controller saved successfully',
+    CONTROLLER_NOT_FOUND:'controller not found',
+    CONTROLLER_ALREADY_EXIST:'controller already exist',
+    CONTROLLER_UPDATED_SUCCESSFULLY:'controller updated successfully'
+
 
 
 

@@ -19,7 +19,7 @@ export class State {
   @OneToMany(() => Vendor, vendor => vendor.state)
   vendors: Vendor[];
 
-  @OneToMany(()=> Device,device=>device.state)
+  @OneToMany(()=> Device,device=>device.state,{ cascade: true })
   devices:Device[];
 
 

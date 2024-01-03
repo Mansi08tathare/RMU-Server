@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn ,OneToMany} from 'typeorm';
 import { State } from './state.entity';
 import { Device } from './device.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity('vendors_tbl')
 export class Vendor {
@@ -13,7 +14,8 @@ export class Vendor {
 
   // @OneToMany(() => Device, device => device.vendor)
   // devices: Device[];
-  @OneToMany(() => Device, device => device.state)
+  // @Exclude() 
+  @OneToMany(() => Device, device => device.vendor,{ onDelete: 'CASCADE' })
   devices: Device[];
 
 

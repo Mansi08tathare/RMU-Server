@@ -99,7 +99,7 @@ export class ConfigController{
     @Put('/:id')
     @ApiParam({ name: 'id', description: 'ID of the config' })
     //@ApiBody({ type: YourDtoClass }) 
-    @ApiResponse({ status: HttpStatus.OK, description: 'Config updated successfully' })
+    @ApiResponse({ status: HttpStatus.ACCEPTED, description: 'Config updated successfully' })
     @ApiResponse({ status: HttpStatus.INTERNAL_SERVER_ERROR, description: 'Internal server error' })
     async updateConfig(@Req() req:any,@Res() res:any,@Param('id') id:any,@Body() body:any){
       try{
@@ -109,7 +109,7 @@ export class ConfigController{
         res
           .status(HttpStatus.INTERNAL_SERVER_ERROR)
           .send({ error: 'Device Microservice ECONNREFUSED' });
-      } else if (resp.statusCode === HttpStatus.OK) {
+      } else if (resp.statusCode === HttpStatus.ACCEPTED) {
         res
           .status(resp.statusCode)
           .send({ success: resp.message });

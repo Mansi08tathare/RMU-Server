@@ -90,16 +90,24 @@ export class VendorService {
 
   async getVendors(): Promise<any> {
     try {
-      let vendors = await this.vendorRepository.find(
-        // {relations:{state:true}}
-        { relations: ['state'], loadRelationIds: true },
+      // let vendors = await this.vendorRepository.find(
+      //   // {relations:{state:true}}
+      //   { relations: ['state'], 
+      //   loadRelationIds: true ,
+      //   },
+      // );
 
-        //  select:{
-        //   state:{
-        //     ref_id:true
-        //   }
-        //}
-      );
+      const vendors = await this.vendorRepository.createQueryBuilder('vendor')
+      .leftJoinAndSelect('vendor.state', 'state')
+      .select([
+        'vendor.ref_id As ref_id',
+        'vendor.name As name' ,
+        'vendor.username As username',
+        'vendor.password As password',
+        'state.ref_id AS state_id',
+      ])
+      .getRawMany();
+
       if (!vendors || vendors.length === 0) {
         return this.commonService.errorMessage(
           [],
@@ -125,12 +133,24 @@ export class VendorService {
 
   async getVendorByID(ref_id: number): Promise<any> {
     try {
-      let vendor = await this.vendorRepository.findOne({
-        where: { ref_id },
-        relations: ['state'],
-        // loadEagerRelations:true
-        loadRelationIds: true,
-      });
+      // let vendor = await this.vendorRepository.findOne({
+      //   where: { ref_id },
+      //   relations: ['state'],
+      //   // loadEagerRelations:true
+      //   loadRelationIds: true,
+      // });
+
+      let vendor = await this.vendorRepository.createQueryBuilder('vendor')
+      .leftJoinAndSelect('vendor.state','state')
+      .select([
+        'vendor.ref_id As ref_id',
+         'vendor.name As name',
+         'vendor.username As username',
+         'vendor.password As password',
+         'state.ref_id As state_id'
+      ])
+      .getRawOne();
+
       if (!vendor) {
         return this.commonService.errorMessage(
           [],

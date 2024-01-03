@@ -19,11 +19,17 @@ export class Device {
   // @Column({ name: 'vendor_id' })
   // vendor_id: number;
 
+  // @ManyToOne(() => State, state => state.devices, {
+  //   onDelete: 'CASCADE',
+  // })
+  // @JoinColumn({ name: 'state_id' })
+  // state: State;
   @ManyToOne(() => State, state => state.devices, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'state_id' })
   state: State;
+  
 
   @ManyToOne(() => Vendor, vendor => vendor.devices, {
     onDelete: 'CASCADE', 
