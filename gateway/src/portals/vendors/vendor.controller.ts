@@ -13,12 +13,16 @@ import {
 
 import { CONSTANT_MSG } from 'src/common-dto/const';
 import { VendorService } from './vendor.service';
+import { ApiTags, ApiResponse, ApiParam } from '@nestjs/swagger';
 
 @Controller('vendor')
+@ApiTags('Vendor')
 export class VendorController {
   constructor(private readonly vendorService: VendorService) {}
 
   @Get('')
+  @ApiResponse({ status: HttpStatus.OK, description: 'All vendors retrieved successfully' })
+  @ApiResponse({ status: HttpStatus.INTERNAL_SERVER_ERROR, description: 'Internal server error' })
   async getVendors(@Res() res: any) {
     try {
       let resp = await this.vendorService.getVendors();
@@ -43,6 +47,9 @@ export class VendorController {
   }
 
   @Get('/:id')
+  @ApiParam({ name: 'id', description: 'ID of the vendor' })
+  @ApiResponse({ status: HttpStatus.OK, description: 'Vendor retrieved successfully' })
+  @ApiResponse({ status: HttpStatus.INTERNAL_SERVER_ERROR, description: 'Internal server error' })
   async getVendorById(@Res() res: any, @Param() param: any) {
     try {
       let ref_id = param.id;
@@ -68,6 +75,9 @@ export class VendorController {
   }
 
   @Post('')
+  //@ApiBody({ type: YourDtoClass }) 
+  @ApiResponse({ status: HttpStatus.CREATED, description: 'Vendor added successfully' })
+  @ApiResponse({ status: HttpStatus.INTERNAL_SERVER_ERROR, description: 'Internal server error' })
   async addVendor(@Res() res: any, @Body() body: any) {
     try {
       let resp = await this.vendorService.addVendor(body);
@@ -89,6 +99,9 @@ export class VendorController {
   }
 
   @Put('')
+  //@ApiBody({ type: YourDtoClass }) 
+  @ApiResponse({ status: HttpStatus.ACCEPTED, description: 'Vendor updated successfully' })
+  @ApiResponse({ status: HttpStatus.INTERNAL_SERVER_ERROR, description: 'Internal server error' })
   async updateVendor(@Res() res: any, @Body() body: any, @Param() param: any) {
     try {
       let resp = await this.vendorService.updateVendor(body);
@@ -110,6 +123,9 @@ export class VendorController {
   }
 
   @Delete('/:id')
+  @ApiParam({ name: 'id', description: 'ID of the vendor to delete' })
+  @ApiResponse({ status: HttpStatus.NO_CONTENT, description: 'Vendor deleted successfully' })
+  @ApiResponse({ status: HttpStatus.INTERNAL_SERVER_ERROR, description: 'Internal server error' })
   async deleteVendor(@Res() res: any,@Req() req:any ,@Param('id') id:any ) {
     try {
       let ref_id = id;

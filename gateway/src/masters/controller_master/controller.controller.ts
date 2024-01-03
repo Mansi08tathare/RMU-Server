@@ -1,14 +1,18 @@
 import { Controller, Get, HttpStatus, Param, Res } from '@nestjs/common';
 import { ControllerMasterService } from './controller.service';
 import { CONSTANT_MSG } from 'src/common-dto/const';
+import { ApiTags, ApiResponse, ApiParam } from '@nestjs/swagger';
 
 @Controller('controller')
+@ApiTags('ControllerMaster')
 export class ControllerMasterController {
   constructor(
     private readonly controllerMasterService: ControllerMasterService,
   ) {}
 
   @Get('')
+  @ApiResponse({ status: HttpStatus.OK, description: 'All controllers retrieved successfully' })
+  @ApiResponse({ status: HttpStatus.INTERNAL_SERVER_ERROR, description: 'Internal server error' })
   async getControllers(@Res() res: any) {
     try {
       let resp = await this.controllerMasterService.getControllers();
@@ -32,6 +36,9 @@ export class ControllerMasterController {
   }
 
   @Get("/:id")
+  @ApiParam({ name: 'id', description: 'ID of the controller' })
+  @ApiResponse({ status: HttpStatus.OK, description: 'Controller retrieved successfully' })
+  @ApiResponse({ status: HttpStatus.INTERNAL_SERVER_ERROR, description: 'Internal server error' })
   async getController(@Res() res:any,@Param('id') id:number){
     try{
       let resp = await this.controllerMasterService.getController(id)

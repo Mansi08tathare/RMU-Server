@@ -2,12 +2,20 @@ import {Body,Controller,HttpStatus,Post,Res,Req,ValidationPipe,Get,Param, Query,
 } from '@nestjs/common';
 import { DeviceService } from '../services/device.service';
 import { CONSTANT_MSG } from 'src/common-dto/const';
+import { ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller()
+@ApiTags('Device')
+
 export class DeviceController {
   constructor(private readonly deviceService: DeviceService) {}
 
   @Post('register')
+  @Post('register')
+  @ApiOperation({ summary: 'Register a device' })
+  // @ApiBody({ type: YourDtoClass }) // Replace YourDtoClass with your actual DTO class
+  @ApiResponse({ status: HttpStatus.OK, description: 'Device registered successfully' })
+  @ApiResponse({ status: HttpStatus.INTERNAL_SERVER_ERROR, description: 'Internal server error' })
   async registerdevice(
     @Body(new ValidationPipe()) body: any,
     @Res() res: any,
@@ -36,6 +44,9 @@ export class DeviceController {
   }
 
   @Get('channel/:CHANNELID/messages')
+  @ApiOperation({ summary: 'Get messages from a channel' })
+  @ApiParam({ name: 'CHANNELID', description: 'ID of the channel' })
+  @ApiQuery({ name: 'subtopic', required: false, description: 'Subtopic filter' })
   async getChannel(@Param() param: any, @Query() query: any) {
     try {
       console.log('channel', param.CHANNELID);
@@ -50,6 +61,7 @@ export class DeviceController {
   }
 
   @Get('regDevice')
+  @ApiOperation({ summary: 'Get registered devices' })
   async getRegisteredDevice(@Req() req: any, @Res() res: any) {
     try{
     console.log('req.user', req.query);
@@ -82,6 +94,7 @@ export class DeviceController {
   }
 
   @Get('regDevice/:ref_id')
+  @ApiOperation({ summary: 'Get device by ref_id' })
   async getRegDeviceById(@Res() res: any, @Param() param: any) {
     console.log('ref_id', param.ref_id);
 
@@ -101,6 +114,7 @@ export class DeviceController {
   }
 
   @Get('regDevice/imei/:imei')
+  @ApiOperation({ summary: 'Get device by IMEI' })
   async getRegDeviceByImei(@Res() res: any, @Param() param: any) {
     // console.log("res",res)
    
@@ -135,6 +149,7 @@ export class DeviceController {
   // }
 
   @Put('/register')
+  @ApiOperation({ summary: 'Update a registered device' })
   async updateDevice(@Req() req:any,@Res() res:any){
     try{
     let params:any = req.body;
@@ -164,6 +179,7 @@ export class DeviceController {
 }
 
 @Delete('/reg/:id')
+@ApiOperation({ summary: 'Delete a registered device' })
 async deleteSimDetail(@Param() param:any,@Req() req:any ,@Res() res:any){
   try{
   console.log('delete device param',param);
@@ -193,6 +209,7 @@ async deleteSimDetail(@Param() param:any,@Req() req:any ,@Res() res:any){
 }
 
 @Post('/reg/:rid/reassign/:id')
+@ApiOperation({ summary: 'Reassign RID for a device' })
 async reassignRidDevice(@Param() param:any ,@Res() res:any){
   console.log('reassign rid device param',param);
   let resp = await this.deviceService.reassignRID(Number(param.rid),Number(param.id))

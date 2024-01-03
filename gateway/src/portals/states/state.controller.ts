@@ -1,12 +1,16 @@
 import {Body,Controller,Delete,Get,HttpStatus,Param, Post,Put,Req,Res} from '@nestjs/common';
 import { StateService } from './state.service';
 import { CONSTANT_MSG } from 'src/common-dto/const';
+import { ApiTags, ApiResponse, ApiParam } from '@nestjs/swagger';
 
 @Controller('state')
+@ApiTags('State')
 export class StateController {
   constructor(private readonly stateService: StateService) {}
 
   @Get('')
+  @ApiResponse({ status: HttpStatus.OK, description: 'All states retrieved successfully' })
+  @ApiResponse({ status: HttpStatus.INTERNAL_SERVER_ERROR, description: 'Internal server error' })
   async getStates(@Req() req: any, @Res() res: any) {
     try {
       //console.log("enter in state")
@@ -32,6 +36,9 @@ export class StateController {
   }
 
   @Get('/:id')
+  @ApiParam({ name: 'id', description: 'ID of the state' })
+  @ApiResponse({ status: HttpStatus.OK, description: 'State retrieved successfully' })
+  @ApiResponse({ status: HttpStatus.INTERNAL_SERVER_ERROR, description: 'Internal server error' })
   async getStateByID(@Res() res:any,@Req() req:any,@Param() param:any){
     try{
         let ref_id=param.id;
@@ -58,6 +65,9 @@ export class StateController {
   }
   //if in state want to add body then dto needed
   @Post('')
+ // @ApiBody({ type: YourDtoClass }) // Replace YourDtoClass with your actual DTO class
+  @ApiResponse({ status: HttpStatus.CREATED, description: 'State added successfully' })
+  @ApiResponse({ status: HttpStatus.INTERNAL_SERVER_ERROR, description: 'Internal server error' })
   async addState(@Req() req: any, @Res() res: any) {
     try {
       const { name, url, sid } = req.body;
@@ -82,6 +92,9 @@ export class StateController {
   }
 
   @Put('')
+  //@ApiBody({ type: YourDtoClass })
+  @ApiResponse({ status: HttpStatus.NO_CONTENT, description: 'State updated successfully' })
+  @ApiResponse({ status: HttpStatus.INTERNAL_SERVER_ERROR, description: 'Internal server error' })
   async updateState(@Body() body: any, @Res() res: any) {
     try {
       let resp = await this.stateService.updateState(body);
@@ -106,6 +119,9 @@ export class StateController {
 
  
   @Delete('/:id')
+  @ApiParam({ name: 'id', description: 'ID of the state to delete' })
+  @ApiResponse({ status: HttpStatus.NO_CONTENT, description: 'State deleted successfully' })
+  @ApiResponse({ status: HttpStatus.INTERNAL_SERVER_ERROR, description: 'Internal server error' })
   async deleteState(@Param() param:any,@Res() res:any,@Req() req:any){
     try{
       let ref_id=param.id;

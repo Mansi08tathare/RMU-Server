@@ -14,8 +14,8 @@ async function bootstrap() {
 
   // Swagger configuration
   const options = new DocumentBuilder()
-    .setTitle('Your API Title')
-    .setDescription('Your API Description')
+    .setTitle('RMU Server')
+    .setDescription(' API Description')
     .setVersion('1.0')
     .build();
 

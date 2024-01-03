@@ -11,12 +11,16 @@ import {
 } from '@nestjs/common';
 import { CONSTANT_MSG } from 'src/common-dto/const';
 import { SimService } from './sim.service';
+import { ApiTags, ApiResponse, ApiParam, ApiBody } from '@nestjs/swagger';
 
 @Controller('sim')
+@ApiTags('Sim') 
 export class SimController {
   constructor(private readonly simService: SimService) {}
 
   @Get('')
+  @ApiResponse({ status: HttpStatus.OK, description: 'All SIMs retrieved successfully' })
+  @ApiResponse({ status: HttpStatus.INTERNAL_SERVER_ERROR, description: 'Internal server error' })
   async getSims(@Res() res: any) {
     try {
       let resp = await this.simService.getSims();
@@ -40,6 +44,9 @@ export class SimController {
   }
 
   @Get('/:id')
+  @ApiParam({ name: 'id', description: 'ID of the SIM' })
+  @ApiResponse({ status: HttpStatus.OK, description: 'SIM retrieved successfully' })
+  @ApiResponse({ status: HttpStatus.INTERNAL_SERVER_ERROR, description: 'Internal server error' })
   async getSim(@Res() res: any, @Param('id') id: number) {
     try {
       let resp = await this.simService.getSim(id);
@@ -64,6 +71,9 @@ export class SimController {
   }
 
   @Post('')
+ // @ApiBody({ type: YourDtoClass }) // Replace YourDtoClass with your actual DTO class
+  @ApiResponse({ status: HttpStatus.CREATED, description: 'SIM added successfully' })
+  @ApiResponse({ status: HttpStatus.INTERNAL_SERVER_ERROR, description: 'Internal server error' })
   async addSim(@Res() res: any, @Body() body: any) {
     try {
       console.log("body",body)
@@ -91,6 +101,10 @@ export class SimController {
   // @Put('/:id')
   // async updateSim(@Param('id') id:number,@Res() res: any, @Body() body: any) {
   @Put('/:id')
+  @ApiParam({ name: 'id', description: 'ID of the SIM to update' })
+  //@ApiBody({ type: YourDtoClass }) // Replace YourDtoClass with your actual DTO class
+  @ApiResponse({ status: HttpStatus.OK, description: 'SIM updated successfully' })
+  @ApiResponse({ status: HttpStatus.INTERNAL_SERVER_ERROR, description: 'Internal server error' })
   async updateSim(@Param('id') id: number, @Res() res: any, @Body() body: any) {
     try {
       console.log('id', id);
@@ -126,6 +140,9 @@ export class SimController {
   }
 
   @Delete('/:id')
+  @ApiParam({ name: 'id', description: 'ID of the SIM to delete' })
+  @ApiResponse({ status: HttpStatus.OK, description: 'SIM deleted successfully' })
+  @ApiResponse({ status: HttpStatus.INTERNAL_SERVER_ERROR, description: 'Internal server error' })
   async deleteSim(@Param('id') id:number,@Res() res:any){
     try{
       console.log("id",id)

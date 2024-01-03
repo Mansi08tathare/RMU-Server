@@ -1,14 +1,19 @@
 import {Controller, Delete, Get,HttpStatus,Param,Post,Put,Req,Res,} from '@nestjs/common';
 import { CONSTANT_MSG } from 'src/common-dto/const';
 import { RidService } from './rid.service';
+import { ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('rid')
+@ApiTags('RID') 
 export class RIDController {
   constructor(private readonly ridService: RidService) {
     // this.getRids()
   }
 
   @Post('addRid')
+  // @ApiBody({ type: YourDtoClass }) // Replace YourDtoClass with your actual DTO class
+  @ApiResponse({ status: HttpStatus.CREATED, description: 'RID added successfully' })
+  @ApiResponse({ status: HttpStatus.INTERNAL_SERVER_ERROR, description: 'Internal server error' })
   async addRID(@Req() req: any, @Res() res: any) {
     const { rid, CONT_MFR } = req.body;
     try {
@@ -38,6 +43,9 @@ export class RIDController {
   }
 
   @Get('all/:rid_ref_id')
+  @ApiParam({ name: 'rid_ref_id', description: 'Reference ID of the RID' })
+  @ApiResponse({ status: HttpStatus.OK, description: 'Config retrieved successfully' })
+  @ApiResponse({ status: HttpStatus.INTERNAL_SERVER_ERROR, description: 'Internal server error' })
   async getAllConfig(@Res() res: any, @Param('rid_ref_id') rid_ref_id: number) {
     try {
       console.log('gw', rid_ref_id);
@@ -66,6 +74,9 @@ export class RIDController {
 
 
   @Get('/:id')
+  @ApiParam({ name: 'id', description: 'ID of the RID' })
+  @ApiResponse({ status: HttpStatus.OK, description: 'RID retrieved successfully' })
+  @ApiResponse({ status: HttpStatus.INTERNAL_SERVER_ERROR, description: 'Internal server error' })
   async getRid(@Param() param:any,@Res() res:any){
     try{
       // console.log("enter in get by id")
@@ -92,6 +103,9 @@ export class RIDController {
 }
 
  @Delete('/:id')
+ @ApiParam({ name: 'id', description: 'ID of the RID to delete' })
+  @ApiResponse({ status: HttpStatus.NO_CONTENT, description: 'RID deleted successfully' })
+  @ApiResponse({ status: HttpStatus.INTERNAL_SERVER_ERROR, description: 'Internal server error' })
  async deleteRid(@Param() param:any, @Req() req:any, @Res() res:any){
   try{
   console.log(param)
@@ -120,6 +134,9 @@ export class RIDController {
 
 
  @Put('/update')
+//  @ApiBody({ type: YourDtoClass }) // Replace YourDtoClass with your actual DTO class
+  @ApiResponse({ status: HttpStatus.ACCEPTED, description: 'RID updated successfully' })
+  @ApiResponse({ status: HttpStatus.INTERNAL_SERVER_ERROR, description: 'Internal server error' })
  async updateRid(@Req() req:any,@Res() res:any){
   try{
    let params:any = req.body;
@@ -152,6 +169,8 @@ export class RIDController {
 
 
  @Get('')
+ @ApiResponse({ status: HttpStatus.OK, description: 'All RIDs retrieved successfully' })
+ @ApiResponse({ status: HttpStatus.INTERNAL_SERVER_ERROR, description: 'Internal server error' })
  async getallRids(@Req() req:any ,@Res() res:any){
   try{
   
