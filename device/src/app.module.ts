@@ -13,6 +13,11 @@ import { SimModule } from './sims/sim.module';
 import { ConfigsModule } from './config-api/configs.module';
 import { AgencyModule } from './masters/agency_masters/agency.module';
 import { ControllerModule } from './masters/controller_masters/controller.module';
+import { MotorModule } from './masters/motor_masters/motor.module';
+import { OemModule } from './masters/oem_masters/oem.module';
+import { ProjectModule } from './masters/project_masters/project.module';
+import { PumpCodeModule } from './masters/pump_code_master/pump_code.module';
+import { PumpHeadModule } from './masters/pump_head_master/pump_head.module';
 
 @Module({
   imports: [ 
@@ -29,7 +34,7 @@ import { ControllerModule } from './masters/controller_masters/controller.module
         port: 3001,
       },
     },
-  ]),RidModule,DeviceModule,StateModule,VendorModule,SimModule,ConfigsModule,AgencyModule,ControllerModule],
+  ]),RidModule,DeviceModule,StateModule,VendorModule,SimModule,ConfigsModule,AgencyModule,ControllerModule,MotorModule,OemModule,ProjectModule,PumpCodeModule,PumpHeadModule],
   controllers: [AppController],
   providers: [AppService],
 })

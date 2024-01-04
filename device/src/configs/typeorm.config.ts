@@ -15,6 +15,11 @@ import { Sim } from 'src/device/entities/sim.entity';
 import { RidSim } from 'src/device/entities/rid.sim.entity';
 import { Agency } from 'src/masters/agency_masters/agency.entity';
 import { ControllerMaster } from 'src/masters/controller_masters/controller.entity';
+import { Motor } from 'src/masters/motor_masters/motor.entity';
+import { OEM } from 'src/masters/oem_masters/oem.entity';
+import { ProjectMaster } from 'src/masters/project_masters/project.entity';
+import { PumpCodeMaster } from 'src/masters/pump_code_master/pump_code.entity';
+import { PumpHeadMaster } from 'src/masters/pump_head_master/pump_head.entity';
 
 
 export default class TypeOrmConfig {
@@ -27,7 +32,7 @@ export default class TypeOrmConfig {
       password: configService.get('DB_PASSWORD'),
       database: configService.get('DB_NAME'),
       migrations:['migrations/**'],
-      entities: [Device,Rid,RidConfig,DeviceRid,ConfigTable,FlowFormula,Invalid,ReconfigurationDetail,ReconfigurationOldConfig,State,Vendor,Sim,RidSim,Agency,ControllerMaster],
+      entities: [Device,Rid,RidConfig,DeviceRid,ConfigTable,FlowFormula,Invalid,ReconfigurationDetail,ReconfigurationOldConfig,State,Vendor,Sim,RidSim,Agency,ControllerMaster,Motor,OEM,ProjectMaster,PumpCodeMaster,PumpHeadMaster],
       
         // other configurations
         "logging": true,

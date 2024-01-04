@@ -142,7 +142,26 @@ export const CONSTANT_MSG = {
     CONTROLLER_SAVED_SUCESSFULLY:'controller saved successfully',
     CONTROLLER_NOT_FOUND:'controller not found',
     CONTROLLER_ALREADY_EXIST:'controller already exist',
-    CONTROLLER_UPDATED_SUCCESSFULLY:'controller updated successfully'
+    CONTROLLER_UPDATED_SUCCESSFULLY:'controller updated successfully',
+    MOTOR_SAVED_SUCCESSFULLY:'motor saved successfully',
+    MOTOR_ALREADY_EXIST:'motor already exist',
+    OEM_ALREADY_EXIST:'oem already exist',
+    OEM_SAVED_SUCCESSFULLY:'oem saved successfully',
+    MOTOR_UPDATED_SUCCESSFULLY:'motor master updated successfully',
+    MOTOR_DELETED_SUCCESSFULLY:'motor deleted successfully',
+    OEM_UPDATED_SUCCESSFULLY:'oem master updated successfully',
+    PROJECT_ALREADY_EXIST:'project master already exist',
+    PROJECT_SAVED_SUCCESSFULLY:'project saved successfully',
+    PROJECT_UPDATED_SUCCESSFULLY:'project master updated successfully',
+    PUMPCODE_ALREADY_EXIST:'pumpcode master already exist',
+    PUMPCODE_SAVED_SUCCESSFULLY:'pumpcode saved succssfully',
+    PUMPCODE_UPDATED_SUCCESSFULLY:'pumpcode master updated successfully',
+    PUMPHEAD_ALREADY_EXIST:'pumphead master already exist',
+    PUMPHEAD_SAVED_SUCCESSFULLY:'pumphead master saved successfully',
+    PUMPHEAD_UPDATED_SUCCESSFULLY:'pumphead updated successfully'
+
+
+
 
 
 

@@ -17,6 +17,16 @@ import { AgencyMasterController } from './masters/agency_master/agency.controlle
 import { AgencyMasterService } from './masters/agency_master/agency.service';
 import { ControllerMasterController } from './masters/controller_master/controller.controller';
 import { ControllerMasterService } from './masters/controller_master/controller.service';
+import { MotorController } from './masters/motor_master/motor.controller';
+import { MotorService } from './masters/motor_master/motor.service';
+import { OemController } from './masters/oem_master/oem.controller';
+import { OemService } from './masters/oem_master/oem.service';
+import { ProjectController } from './masters/project_masters/project.controller ';
+import { ProjectService } from './masters/project_masters/project.service';
+import { PumpCodeController } from './masters/pump_code_master/pump_code.controller';
+import { PumpCodeService } from './masters/pump_code_master/pump_code.service';
+import { PumpHeadController } from './masters/pump_head_master/pump_head.controller';
+import { PumpHeadService } from './masters/pump_head_master/pump_head.service';
 
 @Module({
   imports: [ 
@@ -30,7 +40,7 @@ import { ControllerMasterService } from './masters/controller_master/controller.
         },
       },
     ]),DeviceModule,RIDModule],
-  controllers: [AppController,StateController,VendorController,SimController,ConfigController,AgencyMasterController,ControllerMasterController],
-  providers: [AppService,HealthCheckMicroservicesService,StateService,VendorService,SimService,ConfigService,AgencyMasterService,ControllerMasterService],
+  controllers: [AppController,StateController,VendorController,SimController,ConfigController,AgencyMasterController,ControllerMasterController,MotorController,OemController,ProjectController,PumpCodeController,PumpHeadController],
+  providers: [AppService,HealthCheckMicroservicesService,StateService,VendorService,SimService,ConfigService,AgencyMasterService,ControllerMasterService,MotorService,OemService,ProjectService,PumpCodeService,PumpHeadService],
 })
 export class AppModule {}
