@@ -11,12 +11,24 @@ import {
 } from '@nestjs/common';
 import { MotorService } from './motor.service';
 import { CONSTANT_MSG } from 'src/common-dto/const';
+import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { MotorDto } from './dtos/motor.dto';
 
+@ApiTags('Motor')
 @Controller('motor')
 export class MotorController {
   constructor(private motorService: MotorService) {}
 
   @Get('')
+  @ApiOperation({ summary: 'Get all motors' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'All motors retrieved successfully',
+  })
+  @ApiResponse({
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    description: 'Internal server error',
+  })
   async getAllMotor(@Res() res: any) {
     try {
       let resp = await this.motorService.getAllMotor();
@@ -40,6 +52,16 @@ export class MotorController {
   }
 
   @Get('/:id')
+  @ApiOperation({ summary: 'Get a motor by ID' })
+  @ApiParam({ name: 'id', description: 'ID of the motor' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Motor retrieved successfully',
+  })
+  @ApiResponse({
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    description: 'Internal server error',
+  })
   async getMotor(@Res() res: any, @Param('id') id: number) {
     try {
       let resp = await this.motorService.getMotor(id);
@@ -63,6 +85,16 @@ export class MotorController {
   }
 
   @Post('')
+  @ApiBody({type:MotorDto})
+  @ApiOperation({ summary: 'Add a new motor' })
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: 'Motor added successfully',
+  })
+  @ApiResponse({
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    description: 'Internal server error',
+  })
   async addMotor(@Res() res: any, @Body() body: any) {
     try {
       let resp = await this.motorService.addMotor(body);
@@ -84,6 +116,15 @@ export class MotorController {
   }
 
   @Put('/:id')
+  @ApiOperation({ summary: 'Update a motor by ID' })
+  @ApiResponse({
+    status: HttpStatus.ACCEPTED,
+    description: 'Motor updated successfully',
+  })
+  @ApiResponse({
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    description: 'Internal server error',
+  })
   async updateMotor(
     @Res() res: any,
     @Body() body: any,
@@ -109,6 +150,15 @@ export class MotorController {
   }
 
   @Delete('/:id')
+  @ApiOperation({ summary: 'Delete a motor by ID' })
+  @ApiResponse({
+    status: HttpStatus.NO_CONTENT,
+    description: 'Motor deleted successfully',
+  })
+  @ApiResponse({
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    description: 'Internal server error',
+  })
   async deleteMotor(@Param('id') id: number, @Res() res: any) {
     try {
       let resp = await this.motorService.deleteMotor(id);

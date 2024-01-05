@@ -2,6 +2,8 @@ import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Req, Res }
 import { ConfigService } from "./config.service";
 import { CONSTANT_MSG } from "src/common-dto/const";
 import { ApiTags, ApiResponse, ApiParam, ApiBody } from "@nestjs/swagger";
+import { ConfigurationDto } from "./dtos/config.dto";
+import { UpdateConfigDto } from "./dtos/updateConfig.dto";
 
 @Controller('config')
 @ApiTags('Config')
@@ -69,10 +71,10 @@ export class ConfigController{
     }
 
     @Post('')
-   // @ApiBody({ type: YourDtoClass }) 
+    @ApiBody({ type: ConfigurationDto }) 
     @ApiResponse({ status: HttpStatus.OK, description: 'Config added successfully' })
     @ApiResponse({ status: HttpStatus.INTERNAL_SERVER_ERROR, description: 'Internal server error' })
-    async addConfig(@Req() req:any,@Res() res:any,@Body() body:any){
+    async addConfig(@Req() req:any,@Res() res:any,@Body() body:ConfigurationDto){
       try{
         console.log("gw",body)
       let resp = await this.configService.addConfig(body);
@@ -98,10 +100,10 @@ export class ConfigController{
 
     @Put('/:id')
     @ApiParam({ name: 'id', description: 'ID of the config' })
-    //@ApiBody({ type: YourDtoClass }) 
+   @ApiBody({ type: UpdateConfigDto }) 
     @ApiResponse({ status: HttpStatus.ACCEPTED, description: 'Config updated successfully' })
     @ApiResponse({ status: HttpStatus.INTERNAL_SERVER_ERROR, description: 'Internal server error' })
-    async updateConfig(@Req() req:any,@Res() res:any,@Param('id') id:any,@Body() body:any){
+    async updateConfig(@Req() req:any,@Res() res:any,@Param('id') id:any,@Body() body:UpdateConfigDto){
       try{
        console.log("gw",body,id)
        let resp = await this.configService.updateConfig(body,id);

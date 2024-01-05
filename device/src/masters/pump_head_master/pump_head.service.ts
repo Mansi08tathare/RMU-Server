@@ -135,19 +135,23 @@ export class PumpHeadService{
       
       async updatePumpHead(body: any, id: number) {
         try {
-
+             
             let existingPumpHeads = await this.getPumpHeadByCode(body.code);
             console.log("exist",existingPumpHeads)
             //made change
-             console.log("up",existingPumpHeads.data.ref_id)
+            //  console.log("up",existingPumpHeads.data[0].ref_id)
             if (existingPumpHeads.statusCode === HttpStatus.OK) {
-                const existingPumpHead = existingPumpHeads.data.ref_id;
-    
+              
+                const existingPumpHead = existingPumpHeads.data[0].ref_id;
+                console.log(existingPumpHead)
+                console.log("existing",existingPumpHead.ref_id !== id)
                 if (existingPumpHead && existingPumpHead.ref_id !== id) {
-                    return {
-                        status: HttpStatus.CONFLICT,
-                        resp: 'PumpHead already exists'
-                    };
+                 
+                    return this.commonService.errorMessage(
+                      [],
+                      CONSTANT_MSG.ALREADY_EXIST,
+                      HttpStatus.CONFLICT
+                    )
                 }
             }
 

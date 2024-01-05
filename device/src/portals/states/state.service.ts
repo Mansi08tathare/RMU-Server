@@ -208,7 +208,7 @@ export class StateService {
         .where('ref_id= :id', { id: id })
         .execute();
       console.log('state', state);
-      if (!state) {
+      if (!state && state.affected ===0 ) {
         return this.commonService.errorMessage(
           [],
           CONSTANT_MSG.FAILED_TO_UPDATE_STATE,

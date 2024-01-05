@@ -11,7 +11,9 @@ import {
 } from '@nestjs/common';
 import { ControllerMasterService } from './controller.service';
 import { CONSTANT_MSG } from 'src/common-dto/const';
-import { ApiTags, ApiResponse, ApiParam } from '@nestjs/swagger';
+import { ApiTags, ApiResponse, ApiParam, ApiOperation, ApiBody } from '@nestjs/swagger';
+import { controllerDto } from './dtos/controller.dto';
+import { updateControllerDto } from './dtos/updateController';
 
 @Controller('controller')
 @ApiTags('ControllerMaster')
@@ -87,7 +89,9 @@ export class ControllerMasterController {
   }
 
   @Post('')
-  async addController(@Res() res: any, @Body() body: any) {
+  @ApiOperation({ summary: 'Add a new controller' })
+  @ApiBody({type:controllerDto})
+  async addController(@Res() res: any, @Body() body: controllerDto) {
     try {
       let resp = await this.controllerMasterService.addController(body);
       if (resp.code == 'ECONNREFUSED') {
@@ -108,7 +112,9 @@ export class ControllerMasterController {
   }
 
   @Put('/:id')
-  async updateController(@Body() body:any,@Res() res:any,@Param('id') id:number){
+  @ApiBody({type:updateControllerDto})
+  @ApiOperation({ summary: 'Update a controller by ID' })
+  async updateController(@Body() body:updateControllerDto,@Res() res:any,@Param('id') id:number){
     try{
       console.log(body,id)
       let resp = await this.controllerMasterService.updateController(body,id)
@@ -131,6 +137,7 @@ export class ControllerMasterController {
   }
 
   @Delete('/:id')
+  @ApiOperation({ summary: 'Delete a controller by ID' })
   async deleteController(@Param('id') id:number,@Res()  res:any){
     try{
       let resp = await this.controllerMasterService.deleteController(id)

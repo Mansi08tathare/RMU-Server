@@ -27,6 +27,10 @@ import { PumpCodeController } from './masters/pump_code_master/pump_code.control
 import { PumpCodeService } from './masters/pump_code_master/pump_code.service';
 import { PumpHeadController } from './masters/pump_head_master/pump_head.controller';
 import { PumpHeadService } from './masters/pump_head_master/pump_head.service';
+import { PumpModelController } from './masters/pump_model_master/pump_model.controller';
+import { PumpModelService } from './masters/pump_model_master/pump_model.service';
+import { SolarPumpController } from './masters/solar_pump/solar_pump.controller';
+import { SolarPumpService } from './masters/solar_pump/solar_pump.service';
 
 @Module({
   imports: [ 
@@ -40,7 +44,7 @@ import { PumpHeadService } from './masters/pump_head_master/pump_head.service';
         },
       },
     ]),DeviceModule,RIDModule],
-  controllers: [AppController,StateController,VendorController,SimController,ConfigController,AgencyMasterController,ControllerMasterController,MotorController,OemController,ProjectController,PumpCodeController,PumpHeadController],
-  providers: [AppService,HealthCheckMicroservicesService,StateService,VendorService,SimService,ConfigService,AgencyMasterService,ControllerMasterService,MotorService,OemService,ProjectService,PumpCodeService,PumpHeadService],
+  controllers: [AppController,StateController,VendorController,SimController,ConfigController,AgencyMasterController,ControllerMasterController,MotorController,OemController,ProjectController,PumpCodeController,PumpHeadController,PumpModelController,SolarPumpController],
+  providers: [AppService,HealthCheckMicroservicesService,StateService,VendorService,SimService,ConfigService,AgencyMasterService,ControllerMasterService,MotorService,OemService,ProjectService,PumpCodeService,PumpHeadService,PumpModelService,SolarPumpService],
 })
 export class AppModule {}

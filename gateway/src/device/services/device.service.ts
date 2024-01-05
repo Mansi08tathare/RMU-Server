@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { cDevice } from '../interfaces/device.interface';
+import { DeviceDto } from '../dtos/device.dto';
 
 @Injectable()
 export class DeviceService {
@@ -12,7 +13,8 @@ export class DeviceService {
     return 'Hello World!';
   }
 
-  async registerDevice(configD: cDevice): Promise<any> {
+  // async registerDevice(configD: cDevice): Promise<any> {
+    async registerDevice(configD: DeviceDto): Promise<any> {
     try {
       const device = await this.deviceProxy
         .send({ cmd: 'registerDevice' }, configD)

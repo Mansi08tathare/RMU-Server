@@ -20,6 +20,8 @@ import { OEM } from 'src/masters/oem_masters/oem.entity';
 import { ProjectMaster } from 'src/masters/project_masters/project.entity';
 import { PumpCodeMaster } from 'src/masters/pump_code_master/pump_code.entity';
 import { PumpHeadMaster } from 'src/masters/pump_head_master/pump_head.entity';
+import { PumpModel } from 'src/masters/pump_model_master/pump_model.entity';
+import { SolarPump } from 'src/masters/solar_pump/solar_pump.entity';
 
 
 export default class TypeOrmConfig {
@@ -32,7 +34,7 @@ export default class TypeOrmConfig {
       password: configService.get('DB_PASSWORD'),
       database: configService.get('DB_NAME'),
       migrations:['migrations/**'],
-      entities: [Device,Rid,RidConfig,DeviceRid,ConfigTable,FlowFormula,Invalid,ReconfigurationDetail,ReconfigurationOldConfig,State,Vendor,Sim,RidSim,Agency,ControllerMaster,Motor,OEM,ProjectMaster,PumpCodeMaster,PumpHeadMaster],
+      entities: [Device,Rid,RidConfig,DeviceRid,ConfigTable,FlowFormula,Invalid,ReconfigurationDetail,ReconfigurationOldConfig,State,Vendor,Sim,RidSim,Agency,ControllerMaster,Motor,OEM,ProjectMaster,PumpCodeMaster,PumpHeadMaster,PumpModel,SolarPump],
       
         // other configurations
         "logging": true,

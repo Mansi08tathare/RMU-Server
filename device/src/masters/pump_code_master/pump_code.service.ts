@@ -136,13 +136,14 @@ export class PumpCodeService{
             let existingPumpCodes = await this.getPumpCodeByCode(body.code);
              console.log("up",existingPumpCodes.data[0])
             if (existingPumpCodes.statusCode === HttpStatus.OK) {
-                const existingPumpCode = existingPumpCodes.data[0];
+                const existingPumpCode = existingPumpCodes.data[0].ref_id;
     
                 if (existingPumpCode && existingPumpCode.ref_id !== id) {
-                    return {
-                        status: HttpStatus.CONFLICT,
-                        resp: 'PumpCode already exists'
-                    };
+                  return this.commonService.errorMessage(
+                    [],
+                    CONSTANT_MSG.ALREADY_EXIST,
+                    HttpStatus.CONFLICT
+                  )
                 }
             }
 

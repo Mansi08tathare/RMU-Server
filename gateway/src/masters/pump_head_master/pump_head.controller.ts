@@ -1,7 +1,9 @@
 import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Res } from "@nestjs/common";
 import { PumpHeadService } from "./pump_head.service";
 import { CONSTANT_MSG } from "src/common-dto/const";
+import { ApiTags, ApiOperation, ApiResponse, ApiParam } from "@nestjs/swagger";
 
+@ApiTags('PumpHead')
 @Controller('pumpHead')
 export class PumpHeadController{
     constructor(
@@ -9,6 +11,15 @@ export class PumpHeadController{
     ){}
 
     @Get('')
+    @ApiOperation({ summary: 'Get all pump heads' })
+    @ApiResponse({
+        status: HttpStatus.OK,
+        description: 'All pump heads retrieved successfully',
+    })
+    @ApiResponse({
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        description: 'Internal server error',
+    })
     async getPumpHead(@Res() res:any){
         try{
             
@@ -36,6 +47,16 @@ export class PumpHeadController{
     }
 
     @Get('/:id')
+    @ApiOperation({ summary: 'Get a pump head by ID' })
+    @ApiParam({ name: 'id', description: 'ID of the pump head' })
+    @ApiResponse({
+        status: HttpStatus.OK,
+        description: 'Pump head retrieved successfully',
+    })
+    @ApiResponse({
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        description: 'Internal server error',
+    })
     async getPumpHeadById(@Param('id')id:number,@Res() res:any){
         try{
             let resp = await this.pumpHeadService.getPumpHeadById(id)
@@ -60,6 +81,15 @@ export class PumpHeadController{
     }
 
     @Post('')
+    @ApiOperation({ summary: 'Add a new pump head' })
+    @ApiResponse({
+        status: HttpStatus.CREATED,
+        description: 'Pump head added successfully',
+    })
+    @ApiResponse({
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        description: 'Internal server error',
+    })
     async addPumpHead(@Body() body:any,@Res() res:any){
         try{
            let resp = await this.pumpHeadService.addPumpHead(body)
@@ -85,6 +115,15 @@ export class PumpHeadController{
     }
 
     @Put('/:id')
+    @ApiOperation({ summary: 'Update a pump head by ID' })
+    @ApiResponse({
+        status: HttpStatus.ACCEPTED,
+        description: 'Pump head updated successfully',
+    })
+    @ApiResponse({
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        description: 'Internal server error',
+    })
     async updatePumpHead(
       @Res() res: any,
       @Body() body: any,
@@ -92,6 +131,7 @@ export class PumpHeadController{
     ) {
       try {
         let resp = await this.pumpHeadService.updatePumpHead(body, id);
+        console.log("gw",resp)
         if (resp.code == 'ECONNREFUSED') {
           res
             .status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -102,6 +142,7 @@ export class PumpHeadController{
           res.status(resp.statusCode).send({ error: resp.message });
         }
       } catch (err) {
+        console.log("err",err)
         res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
           message: CONSTANT_MSG.INTERNAL_SERVER_ERR,
           statusCode: false,
@@ -109,6 +150,15 @@ export class PumpHeadController{
       }
     }
     @Delete('/:id')
+    @ApiOperation({ summary: 'Delete a pump head by ID' })
+    @ApiResponse({
+        status: HttpStatus.NO_CONTENT,
+        description: 'Pump head deleted successfully',
+    })
+    @ApiResponse({
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        description: 'Internal server error',
+    })
     async deletePumpHead(@Param('id') id: number, @Res() res: any) {
       try {
         let resp = await this.pumpHeadService.deletePumpHead(id);

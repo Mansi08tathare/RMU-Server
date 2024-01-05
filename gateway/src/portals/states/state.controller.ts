@@ -1,7 +1,9 @@
 import {Body,Controller,Delete,Get,HttpStatus,Param, Post,Put,Req,Res} from '@nestjs/common';
 import { StateService } from './state.service';
 import { CONSTANT_MSG } from 'src/common-dto/const';
-import { ApiTags, ApiResponse, ApiParam } from '@nestjs/swagger';
+import { ApiTags, ApiResponse, ApiParam, ApiBody } from '@nestjs/swagger';
+import { StateDto } from './state.dto';
+import { updateStateDto } from './updateState.dto';
 
 @Controller('state')
 @ApiTags('State')
@@ -65,12 +67,12 @@ export class StateController {
   }
   //if in state want to add body then dto needed
   @Post('')
- // @ApiBody({ type: YourDtoClass }) // Replace YourDtoClass with your actual DTO class
+ @ApiBody({ type: StateDto }) 
   @ApiResponse({ status: HttpStatus.CREATED, description: 'State added successfully' })
   @ApiResponse({ status: HttpStatus.INTERNAL_SERVER_ERROR, description: 'Internal server error' })
-  async addState(@Req() req: any, @Res() res: any) {
+  async addState(@Req() req: any, @Res() res: any,@Body() body:StateDto) {
     try {
-      const { name, url, sid } = req.body;
+      const { name, url, sid } = body;
       let resp = await this.stateService.addState(name, url, sid);
       console.log("resp",resp)
       if (resp.code === 'ECONNREFUSED') {
@@ -92,10 +94,10 @@ export class StateController {
   }
 
   @Put('')
-  //@ApiBody({ type: YourDtoClass })
+  @ApiBody({ type: updateStateDto })
   @ApiResponse({ status: HttpStatus.NO_CONTENT, description: 'State updated successfully' })
   @ApiResponse({ status: HttpStatus.INTERNAL_SERVER_ERROR, description: 'Internal server error' })
-  async updateState(@Body() body: any, @Res() res: any) {
+  async updateState(@Body() body: updateStateDto, @Res() res: any) {
     try {
       let resp = await this.stateService.updateState(body);
       console.log('state', resp);
@@ -103,7 +105,7 @@ export class StateController {
         res
           .status(HttpStatus.INTERNAL_SERVER_ERROR)
           .send({ error: 'Device Microservice ECONNREFUSED' });
-      } else if (resp.statusCode === HttpStatus.NO_CONTENT) {
+      } else if (resp.statusCode === HttpStatus.ACCEPTED) {
         res.status(resp.statusCode).send({ success: resp.message });
       } else {
         res.status(resp.statusCode).send({ error: resp.message });

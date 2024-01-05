@@ -2,7 +2,8 @@ import {Body,Controller,HttpStatus,Post,Res,Req,ValidationPipe,Get,Param, Query,
 } from '@nestjs/common';
 import { DeviceService } from '../services/device.service';
 import { CONSTANT_MSG } from 'src/common-dto/const';
-import { ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { DeviceDto } from '../dtos/device.dto';
 
 @Controller()
 @ApiTags('Device')
@@ -10,19 +11,19 @@ import { ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/
 export class DeviceController {
   constructor(private readonly deviceService: DeviceService) {}
 
-  @Post('register')
+  
   @Post('register')
   @ApiOperation({ summary: 'Register a device' })
-  // @ApiBody({ type: YourDtoClass }) // Replace YourDtoClass with your actual DTO class
+  @ApiBody({ type: DeviceDto }) 
   @ApiResponse({ status: HttpStatus.OK, description: 'Device registered successfully' })
   @ApiResponse({ status: HttpStatus.INTERNAL_SERVER_ERROR, description: 'Internal server error' })
   async registerdevice(
-    @Body(new ValidationPipe()) body: any,
+    @Body(new ValidationPipe()) body: DeviceDto,
     @Res() res: any,
-    @Req() req: any,
+   // @Req() req: any,
   ) {
     try {
-      const device = await this.deviceService.registerDevice(req.body);
+      const device = await this.deviceService.registerDevice(body);
 
       console.log("res",res)
       //console.log("gc",device)
@@ -94,6 +95,7 @@ export class DeviceController {
   }
 
   @Get('regDevice/:ref_id')
+  @ApiParam({name:'ref_id'})
   @ApiOperation({ summary: 'Get device by ref_id' })
   async getRegDeviceById(@Res() res: any, @Param() param: any) {
     console.log('ref_id', param.ref_id);

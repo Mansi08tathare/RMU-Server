@@ -12,6 +12,8 @@ import {
 import { CONSTANT_MSG } from 'src/common-dto/const';
 import { SimService } from './sim.service';
 import { ApiTags, ApiResponse, ApiParam, ApiBody } from '@nestjs/swagger';
+import { SimDto } from './dtos/sim.dto';
+import { UpdateSimDto } from './dtos/updateSim.dto';
 
 @Controller('sim')
 @ApiTags('Sim') 
@@ -71,10 +73,10 @@ export class SimController {
   }
 
   @Post('')
- // @ApiBody({ type: YourDtoClass }) // Replace YourDtoClass with your actual DTO class
+ @ApiBody({ type: SimDto }) 
   @ApiResponse({ status: HttpStatus.CREATED, description: 'SIM added successfully' })
   @ApiResponse({ status: HttpStatus.INTERNAL_SERVER_ERROR, description: 'Internal server error' })
-  async addSim(@Res() res: any, @Body() body: any) {
+  async addSim(@Res() res: any, @Body() body: SimDto) {
     try {
       console.log("body",body)
       let resp = await this.simService.addSim(body);
@@ -102,10 +104,10 @@ export class SimController {
   // async updateSim(@Param('id') id:number,@Res() res: any, @Body() body: any) {
   @Put('/:id')
   @ApiParam({ name: 'id', description: 'ID of the SIM to update' })
-  //@ApiBody({ type: YourDtoClass }) // Replace YourDtoClass with your actual DTO class
+  @ApiBody({ type: UpdateSimDto }) 
   @ApiResponse({ status: HttpStatus.OK, description: 'SIM updated successfully' })
   @ApiResponse({ status: HttpStatus.INTERNAL_SERVER_ERROR, description: 'Internal server error' })
-  async updateSim(@Param('id') id: number, @Res() res: any, @Body() body: any) {
+  async updateSim(@Param('id') id: number, @Res() res: any, @Body() body: UpdateSimDto) {
     try {
       console.log('id', id);
       // let id=param.id

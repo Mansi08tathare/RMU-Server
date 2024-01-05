@@ -158,7 +158,16 @@ export const CONSTANT_MSG = {
     PUMPCODE_UPDATED_SUCCESSFULLY:'pumpcode master updated successfully',
     PUMPHEAD_ALREADY_EXIST:'pumphead master already exist',
     PUMPHEAD_SAVED_SUCCESSFULLY:'pumphead master saved successfully',
-    PUMPHEAD_UPDATED_SUCCESSFULLY:'pumphead updated successfully'
+    PUMPHEAD_UPDATED_SUCCESSFULLY:'pumphead updated successfully',
+    ALREADY_EXIST:'Already exist',
+    PUMPMODEL_SAVED_SUCCESSFULLY:'pump model saved successfully',
+    PUMPMODEL_ALREADY_EXIST:'pump model already exist',
+    PUMPMODEL_UPDATED_SUCCESSFULLY:'pump model update sucessfully',
+    SOLARPUMP_ALREADY_EXIST:'solar pump already exist',
+    SOLARPUMP_SAVED_SUCCESSFULLY:'solar pump saved successfully',
+    SOLARPUMP_UPDATED_SUCCESSFULLY:'solar pump updated successfully'
+
+
 
 
 

@@ -13,7 +13,9 @@ import {
 
 import { CONSTANT_MSG } from 'src/common-dto/const';
 import { VendorService } from './vendor.service';
-import { ApiTags, ApiResponse, ApiParam } from '@nestjs/swagger';
+import { ApiTags, ApiResponse, ApiParam, ApiBody } from '@nestjs/swagger';
+import { VendorDto } from './dtos/vendor.dto';
+import { updateVendorDto } from './dtos/updateVendor.dto';
 
 @Controller('vendor')
 @ApiTags('Vendor')
@@ -75,10 +77,10 @@ export class VendorController {
   }
 
   @Post('')
-  //@ApiBody({ type: YourDtoClass }) 
+  @ApiBody({ type:VendorDto }) 
   @ApiResponse({ status: HttpStatus.CREATED, description: 'Vendor added successfully' })
   @ApiResponse({ status: HttpStatus.INTERNAL_SERVER_ERROR, description: 'Internal server error' })
-  async addVendor(@Res() res: any, @Body() body: any) {
+  async addVendor(@Res() res: any, @Body() body: VendorDto) {
     try {
       let resp = await this.vendorService.addVendor(body);
       if (resp.code == 'ECONNREFUSED') {
@@ -99,10 +101,10 @@ export class VendorController {
   }
 
   @Put('')
-  //@ApiBody({ type: YourDtoClass }) 
+  @ApiBody({ type: updateVendorDto }) 
   @ApiResponse({ status: HttpStatus.ACCEPTED, description: 'Vendor updated successfully' })
   @ApiResponse({ status: HttpStatus.INTERNAL_SERVER_ERROR, description: 'Internal server error' })
-  async updateVendor(@Res() res: any, @Body() body: any, @Param() param: any) {
+  async updateVendor(@Res() res: any, @Body() body: updateVendorDto, @Param() param: any) {
     try {
       let resp = await this.vendorService.updateVendor(body);
       if (resp.code == 'ECONNREFUSED') {

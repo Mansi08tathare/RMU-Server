@@ -137,13 +137,14 @@ export class ProjectService{
             let existingProjects = await this.getProjectByName(body.project_name);
 
         if (existingProjects.statusCode === HttpStatus.OK) {
-            const existingProject = existingProjects.data[0];
+            const existingProject = existingProjects.data[0].ref_id;
 
             if (existingProject && existingProject.ref_id !== id) {
-                return {
-                    status: HttpStatus.CONFLICT,
-                    resp: 'Project already exists'
-                };
+              return this.commonService.errorMessage(
+                [],
+                CONSTANT_MSG.ALREADY_EXIST,
+                HttpStatus.CONFLICT
+              )
             }
         }
           let resp = await this.projectRepository.update({ ref_id: id }, body);

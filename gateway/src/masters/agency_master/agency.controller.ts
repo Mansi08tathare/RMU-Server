@@ -2,6 +2,8 @@ import { Body,Controller,Delete,Get,HttpStatus,Param,Post,Put,Req,Res,} from '@n
 import { AgencyMasterService } from './agency.service';
 import { CONSTANT_MSG } from 'src/common-dto/const';
 import { ApiTags, ApiResponse, ApiParam, ApiBody } from '@nestjs/swagger';
+import { AgencyDto } from './dtos/agency.dto';
+import { updateAgencyDto } from './dtos/updateAgency.dto';
 
 @Controller('agency')
 @ApiTags('Agency') 
@@ -60,7 +62,7 @@ export class AgencyMasterController {
   }
 
   @Post('')
- // @ApiBody({ type: YourDtoClass }) // Replace YourDtoClass with your actual DTO class
+ @ApiBody({ type: AgencyDto }) 
   @ApiResponse({ status: HttpStatus.CREATED, description: 'Agency added successfully' })
   @ApiResponse({ status: HttpStatus.INTERNAL_SERVER_ERROR, description: 'Internal server error' })
   async addAgency(@Body() body: any, @Res() res: any) {
@@ -85,6 +87,7 @@ export class AgencyMasterController {
   }
 
   @Put('/:id')
+  @ApiBody({type:updateAgencyDto})
   @ApiParam({ name: 'id', description: 'ID of the agency to update' })
  // @ApiBody({ type: YourDtoClass }) // Replace YourDtoClass with your actual DTO class
   @ApiResponse({ status: HttpStatus.ACCEPTED, description: 'Agency updated successfully' })

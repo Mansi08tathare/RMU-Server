@@ -1,7 +1,9 @@
 import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Res } from "@nestjs/common";
 import { OemService } from "./oem.service";
 import { CONSTANT_MSG } from "src/common-dto/const";
+import { ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
 
+@ApiTags('OEM')
 @Controller('oem')
 export class OemController{
     constructor(
@@ -9,6 +11,15 @@ export class OemController{
     ){}
 
     @Get('')
+    @ApiOperation({ summary: 'Get all OEMs' })
+    @ApiResponse({
+        status: HttpStatus.OK,
+        description: 'All OEMs retrieved successfully',
+    })
+    @ApiResponse({
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        description: 'Internal server error',
+    })
     async getOem(@Res() res:any){
         try{
             
@@ -36,6 +47,16 @@ export class OemController{
     }
 
     @Get('/:id')
+    @ApiOperation({ summary: 'Get an OEM by ID' })
+    @ApiParam({ name: 'id', description: 'ID of the OEM' })
+    @ApiResponse({
+        status: HttpStatus.OK,
+        description: 'OEM retrieved successfully',
+    })
+    @ApiResponse({
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        description: 'Internal server error',
+    })
     async getOemById(@Param('id')id:number,@Res() res:any){
         try{
             let resp = await this.oemService.getOemById(id)
@@ -60,6 +81,15 @@ export class OemController{
     }
 
     @Post('')
+    @ApiOperation({ summary: 'Add a new OEM' })
+    @ApiResponse({
+        status: HttpStatus.CREATED,
+        description: 'OEM added successfully',
+    })
+    @ApiResponse({
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        description: 'Internal server error',
+    })
     async addOem(@Body() body:any,@Res() res:any){
         try{
            let resp = await this.oemService.addOem(body)
@@ -85,6 +115,15 @@ export class OemController{
     }
 
     @Put('/:id')
+    @ApiOperation({ summary: 'Update an OEM by ID' })
+    @ApiResponse({
+        status: HttpStatus.ACCEPTED,
+        description: 'OEM updated successfully',
+    })
+    @ApiResponse({
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        description: 'Internal server error',
+    })
     async updateOem(
       @Res() res: any,
       @Body() body: any,

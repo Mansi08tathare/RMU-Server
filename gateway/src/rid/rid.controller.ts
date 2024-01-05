@@ -1,7 +1,9 @@
 import {Controller, Delete, Get,HttpStatus,Param,Post,Put,Req,Res,} from '@nestjs/common';
 import { CONSTANT_MSG } from 'src/common-dto/const';
 import { RidService } from './rid.service';
-import { ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { RidDto } from './dtos/rid.dto';
+import { UpdateRidDto } from './dtos/updateRid.dto';
 
 @Controller('rid')
 @ApiTags('RID') 
@@ -11,7 +13,7 @@ export class RIDController {
   }
 
   @Post('addRid')
-  // @ApiBody({ type: YourDtoClass }) // Replace YourDtoClass with your actual DTO class
+  @ApiBody({ type: RidDto }) 
   @ApiResponse({ status: HttpStatus.CREATED, description: 'RID added successfully' })
   @ApiResponse({ status: HttpStatus.INTERNAL_SERVER_ERROR, description: 'Internal server error' })
   async addRID(@Req() req: any, @Res() res: any) {
@@ -134,7 +136,7 @@ export class RIDController {
 
 
  @Put('/update')
-//  @ApiBody({ type: YourDtoClass }) // Replace YourDtoClass with your actual DTO class
+ @ApiBody({ type: UpdateRidDto }) 
   @ApiResponse({ status: HttpStatus.ACCEPTED, description: 'RID updated successfully' })
   @ApiResponse({ status: HttpStatus.INTERNAL_SERVER_ERROR, description: 'Internal server error' })
  async updateRid(@Req() req:any,@Res() res:any){
