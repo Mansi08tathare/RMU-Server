@@ -1,7 +1,8 @@
 import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Res } from "@nestjs/common";
 import { SolarPumpService } from "./solar_pump.service";
 import { CONSTANT_MSG } from "src/common-dto/const";
-import { ApiTags, ApiOperation, ApiResponse, ApiParam } from "@nestjs/swagger";
+import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody } from "@nestjs/swagger";
+import { SolarPumpDto } from "./dtos/solarpump.dto";
 
 @ApiTags('SolarPump')
 @Controller('solarPump')
@@ -90,6 +91,7 @@ export class SolarPumpController{
         status: HttpStatus.INTERNAL_SERVER_ERROR,
         description: 'Internal server error',
     })
+    @ApiBody({type:SolarPumpDto})
     async addSolarPump(@Body() body:any,@Res() res:any){
         try{
            let resp = await this.solarPumpService.addSolarPump(body)

@@ -1,7 +1,9 @@
 import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Res } from "@nestjs/common";
 import { PumpCodeService } from "./pump_code.service";
 import { CONSTANT_MSG } from "src/common-dto/const";
-import { ApiTags, ApiOperation, ApiResponse, ApiParam } from "@nestjs/swagger";
+import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody } from "@nestjs/swagger";
+import { PumpCodeDto } from "./dtos/pumpcode.dto";
+import { UpdatePumpCodeDto } from "./dtos/updatePumpcode.dto";
 
 @ApiTags('PumpCode')
 @Controller('pumpCode')
@@ -90,7 +92,8 @@ export class PumpCodeController{
         status: HttpStatus.INTERNAL_SERVER_ERROR,
         description: 'Internal server error',
     })
-    async addPumpCode(@Body() body:any,@Res() res:any){
+    @ApiBody({type:PumpCodeDto})
+    async addPumpCode(@Body() body:PumpCodeDto,@Res() res:any){
         try{
            let resp = await this.pumpCodeService.addPumpCode(body)
            if (resp.code == 'ECONNREFUSED') {
@@ -115,6 +118,7 @@ export class PumpCodeController{
     }
 
     @Put('/:id')
+    @ApiBody({type:UpdatePumpCodeDto})
     @ApiOperation({ summary: 'Update a pump code by ID' })
     @ApiResponse({
         status: HttpStatus.ACCEPTED,
@@ -126,7 +130,7 @@ export class PumpCodeController{
     })
     async updatePumpCode(
       @Res() res: any,
-      @Body() body: any,
+      @Body() body: UpdatePumpCodeDto,
       @Param('id') id: number,
     ) {
       try {

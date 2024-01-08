@@ -45,7 +45,7 @@ export class SolarPumpController {
          let resp = await this.solarPumpService.updateSolarPump(body,id)
          return resp
       }catch(err){
-          console.log("err",err)
+          console.log("Upd Solar Pump err",err)
           return err
       }
   }

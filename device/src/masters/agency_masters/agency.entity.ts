@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm' ;
+import { User } from 'src/users/user.entity';
+import { Entity, PrimaryGeneratedColumn, Column ,OneToMany} from 'typeorm' ;
 
 @Entity({name:'agency_master_tbl'})
 export class Agency{
@@ -9,5 +10,7 @@ export class Agency{
     @Column({name:'name'})
     name:string;
 
+    @OneToMany(() => User, user => user.agency)
+    users: User[];
 
 }

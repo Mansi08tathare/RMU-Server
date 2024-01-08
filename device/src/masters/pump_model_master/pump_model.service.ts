@@ -70,6 +70,7 @@ export class PumpModelService{
 
      async addPumpModel(body: any) {
         try {
+          
           let exist = await this.getPumpModelByModel(body.model);
        
           if (exist.data.length > 0 && exist.statusCode === HttpStatus.OK) {
@@ -116,7 +117,14 @@ export class PumpModelService{
               CONSTANT_MSG.FETCH_SUCCESSFULLY,
               HttpStatus.OK,
             );
-          } else {
+          // } else if(exist.length === 0){
+          //   return this.commonService.errorMessage(
+          //     [],
+          //     CONSTANT_MSG.REF_ID_DOES_NOT_PRESENT,
+          //     HttpStatus.NOT_FOUND
+          //   )
+          } 
+          else {
             return this.commonService.errorMessage(
               [],
               CONSTANT_MSG.FETCH_ERROR,
@@ -135,7 +143,15 @@ export class PumpModelService{
       
       async updatePumpModel(body: any, id: number) {
         try {
-             
+          let ref_id = await this.pumpModelRepository.find({where:{ref_id:id}})
+          //console.log("ref_id",ref_id)
+          if(ref_id.length===0){
+            return this.commonService.errorMessage(
+              [],
+              CONSTANT_MSG.REF_ID_DOES_NOT_PRESENT,
+              HttpStatus.NOT_FOUND
+            )
+          }
             let existingPumpModels = await this.getPumpModelByModel(body.model);
             console.log("exist",existingPumpModels)
             //made change

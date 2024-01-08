@@ -1,7 +1,9 @@
 import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Res } from "@nestjs/common";
 import { PumpHeadService } from "./pump_head.service";
 import { CONSTANT_MSG } from "src/common-dto/const";
-import { ApiTags, ApiOperation, ApiResponse, ApiParam } from "@nestjs/swagger";
+import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody } from "@nestjs/swagger";
+import { PumpHeadDto } from "./dtos/pumphead.dto";
+import { UpdatProjectDto } from "../project_masters/dtos/updateProject.dto";
 
 @ApiTags('PumpHead')
 @Controller('pumpHead')
@@ -90,7 +92,8 @@ export class PumpHeadController{
         status: HttpStatus.INTERNAL_SERVER_ERROR,
         description: 'Internal server error',
     })
-    async addPumpHead(@Body() body:any,@Res() res:any){
+    @ApiBody({type:PumpHeadDto})
+    async addPumpHead(@Body() body:PumpHeadDto,@Res() res:any){
         try{
            let resp = await this.pumpHeadService.addPumpHead(body)
            if (resp.code == 'ECONNREFUSED') {
@@ -124,6 +127,7 @@ export class PumpHeadController{
         status: HttpStatus.INTERNAL_SERVER_ERROR,
         description: 'Internal server error',
     })
+    @ApiBody({type:UpdatProjectDto})
     async updatePumpHead(
       @Res() res: any,
       @Body() body: any,

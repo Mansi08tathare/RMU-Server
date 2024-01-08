@@ -135,6 +135,15 @@ export class PumpHeadService{
       
       async updatePumpHead(body: any, id: number) {
         try {
+          let ref_id = await this.pumpHeadRepository.find({where:{ref_id:id}})
+            //console.log("ref_id",ref_id)
+            if(ref_id.length===0){
+              return this.commonService.errorMessage(
+                [],
+                CONSTANT_MSG.REF_ID_DOES_NOT_PRESENT,
+                HttpStatus.NOT_FOUND
+              )
+            }
              
             let existingPumpHeads = await this.getPumpHeadByCode(body.code);
             console.log("exist",existingPumpHeads)

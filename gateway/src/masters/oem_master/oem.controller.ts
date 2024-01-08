@@ -1,7 +1,9 @@
 import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Res } from "@nestjs/common";
 import { OemService } from "./oem.service";
 import { CONSTANT_MSG } from "src/common-dto/const";
-import { ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { OemDto } from "./dtos/oem.dto";
+import { updateOemDto } from "./dtos/updateOem.dto";
 
 @ApiTags('OEM')
 @Controller('oem')
@@ -90,7 +92,8 @@ export class OemController{
         status: HttpStatus.INTERNAL_SERVER_ERROR,
         description: 'Internal server error',
     })
-    async addOem(@Body() body:any,@Res() res:any){
+    @ApiBody({type:OemDto})
+    async addOem(@Body() body:OemDto,@Res() res:any){
         try{
            let resp = await this.oemService.addOem(body)
            if (resp.code == 'ECONNREFUSED') {
@@ -115,6 +118,7 @@ export class OemController{
     }
 
     @Put('/:id')
+    @ApiBody({type:updateOemDto})
     @ApiOperation({ summary: 'Update an OEM by ID' })
     @ApiResponse({
         status: HttpStatus.ACCEPTED,

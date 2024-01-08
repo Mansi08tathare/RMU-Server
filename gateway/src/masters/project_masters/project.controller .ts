@@ -1,7 +1,9 @@
 import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Res } from "@nestjs/common";
 import { ProjectService } from "./project.service";
 import { CONSTANT_MSG } from "src/common-dto/const";
-import { ApiTags, ApiOperation, ApiResponse, ApiParam } from "@nestjs/swagger";
+import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody } from "@nestjs/swagger";
+import { ProjectDto } from "./dtos/project.dto";
+import { UpdatProjectDto } from "./dtos/updateProject.dto";
 
 
 @ApiTags('Project')
@@ -91,7 +93,8 @@ export class ProjectController{
         status: HttpStatus.INTERNAL_SERVER_ERROR,
         description: 'Internal server error',
     })
-    async addProject(@Body() body:any,@Res() res:any){
+    @ApiBody({type:ProjectDto})
+    async addProject(@Body() body:ProjectDto,@Res() res:any){
         try{
            let resp = await this.projectService.addProject(body)
            if (resp.code == 'ECONNREFUSED') {
@@ -116,6 +119,7 @@ export class ProjectController{
     }
 
     @Put('/:id')
+    @ApiBody({type:UpdatProjectDto})
     @ApiOperation({ summary: 'Update a project by ID' })
     @ApiResponse({
         status: HttpStatus.ACCEPTED,
@@ -127,7 +131,7 @@ export class ProjectController{
     })
     async updateProject(
       @Res() res: any,
-      @Body() body: any,
+      @Body() body: UpdatProjectDto,
       @Param('id') id: number,
     ) {
       try {

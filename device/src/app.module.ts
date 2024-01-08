@@ -20,6 +20,7 @@ import { PumpCodeModule } from './masters/pump_code_master/pump_code.module';
 import { PumpHeadModule } from './masters/pump_head_master/pump_head.module';
 import { PumpModelModule } from './masters/pump_model_master/pump_model.module';
 import { SolarPumpModule } from './masters/solar_pump/solar_pump.module';
+import { UserModule } from './users/user.module';
 
 @Module({
   imports: [ 
@@ -36,7 +37,7 @@ import { SolarPumpModule } from './masters/solar_pump/solar_pump.module';
         port: 3001,
       },
     },
-  ]),RidModule,DeviceModule,StateModule,VendorModule,SimModule,ConfigsModule,AgencyModule,ControllerModule,MotorModule,OemModule,ProjectModule,PumpCodeModule,PumpHeadModule,PumpModelModule,SolarPumpModule],
+  ]),RidModule,DeviceModule,StateModule,VendorModule,SimModule,ConfigsModule,AgencyModule,ControllerModule,MotorModule,OemModule,ProjectModule,PumpCodeModule,PumpHeadModule,PumpModelModule,SolarPumpModule,UserModule],
   controllers: [AppController],
   providers: [AppService],
 })

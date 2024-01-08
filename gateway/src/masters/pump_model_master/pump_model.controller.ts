@@ -1,7 +1,9 @@
 import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Res } from "@nestjs/common";
 import { PumpModelService } from "./pump_model.service";
 import { CONSTANT_MSG } from "src/common-dto/const";
-import { ApiTags, ApiOperation, ApiResponse, ApiParam } from "@nestjs/swagger";
+import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody } from "@nestjs/swagger";
+import { PumpModelDto } from "./dtos/pumpmodel.dto";
+import { UpdatePumpModelDto } from "./dtos/Updatepumpmodel.dto";
 
 @ApiTags('PumpModel')
 @Controller('pumpModel')
@@ -90,7 +92,8 @@ export class PumpModelController{
         status: HttpStatus.INTERNAL_SERVER_ERROR,
         description: 'Internal server error',
     })
-    async addPumpModel(@Body() body:any,@Res() res:any){
+    @ApiBody({type:PumpModelDto})
+    async addPumpModel(@Body() body:PumpModelDto,@Res() res:any){
         try{
            let resp = await this.pumpModelService.addPumpModel(body)
            console.log("resp",resp)
@@ -117,6 +120,7 @@ export class PumpModelController{
     }
 
     @Put('/:id')
+    //@ApiBody({type:UpdatePumpModelDto})
     @ApiOperation({ summary: 'Update a pump model by ID' })
     @ApiResponse({
         status: HttpStatus.ACCEPTED,
@@ -126,9 +130,10 @@ export class PumpModelController{
         status: HttpStatus.INTERNAL_SERVER_ERROR,
         description: 'Internal server error',
     })
+    @ApiBody({type:UpdatePumpModelDto})
     async updatePumpModel(
       @Res() res: any,
-      @Body() body: any,
+      @Body() body: UpdatePumpModelDto,
       @Param('id') id: number,
     ) {
       try {

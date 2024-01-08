@@ -13,6 +13,7 @@ import { MotorService } from './motor.service';
 import { CONSTANT_MSG } from 'src/common-dto/const';
 import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { MotorDto } from './dtos/motor.dto';
+import { updateMotorDto } from './dtos/updateMotor.dto';
 
 @ApiTags('Motor')
 @Controller('motor')
@@ -116,6 +117,7 @@ export class MotorController {
   }
 
   @Put('/:id')
+  @ApiBody({type:updateMotorDto})
   @ApiOperation({ summary: 'Update a motor by ID' })
   @ApiResponse({
     status: HttpStatus.ACCEPTED,
@@ -127,7 +129,7 @@ export class MotorController {
   })
   async updateMotor(
     @Res() res: any,
-    @Body() body: any,
+    @Body() body: updateMotorDto,
     @Param('id') id: number,
   ) {
     try {

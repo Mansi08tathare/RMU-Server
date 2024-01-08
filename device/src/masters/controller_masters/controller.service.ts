@@ -148,6 +148,15 @@ export class ControllerMasterService {
 
   async updateController(body:any,id:number){
     try{
+      let ref_id = await this.controllerRepository.find({where:{ref_id:id}})
+            //console.log("ref_id",ref_id)
+            if(ref_id.length===0){
+              return this.commonService.errorMessage(
+                [],
+                CONSTANT_MSG.REF_ID_DOES_NOT_PRESENT,
+                HttpStatus.NOT_FOUND
+              )
+            }
      let resp = await this.controllerRepository.update(
       {ref_id:id},
       body

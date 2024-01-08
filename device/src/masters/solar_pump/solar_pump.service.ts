@@ -116,7 +116,16 @@ export class SolarPumpService{
               CONSTANT_MSG.FETCH_SUCCESSFULLY,
               HttpStatus.OK,
             );
-          } else {
+          } 
+          // else if(exist.length===0){
+          //   //console.log("ref_id dos not exist")
+          //   return this.commonService.errorMessage(
+          //     [],
+          //     CONSTANT_MSG.REF_ID_DOES_NOT_PRESENT,
+          //     HttpStatus.NOT_FOUND
+          //   )
+          // }
+          else {
             return this.commonService.errorMessage(
               [],
               CONSTANT_MSG.FETCH_ERROR,
@@ -124,6 +133,7 @@ export class SolarPumpService{
             );
           }
         } catch (err) {
+          console.log("err",err)
           return this.commonService.errorMessage(
             [],
             CONSTANT_MSG.INTERNAL_SERVER_ERR,
@@ -135,7 +145,15 @@ export class SolarPumpService{
       
       async updateSolarPump(body: any, id: number) {
         try {
-             
+            let ref_id = await this.solarPumpRepository.find({where:{ref_id:id}})
+            //console.log("ref_id",ref_id)
+            if(ref_id.length===0){
+              return this.commonService.errorMessage(
+                [],
+                CONSTANT_MSG.REF_ID_DOES_NOT_PRESENT,
+                HttpStatus.NOT_FOUND
+              )
+            }
             let existingSolarPumps = await this.getSolarPumpByModel(body.description);
             console.log("exist",existingSolarPumps)
             //made change
@@ -154,6 +172,13 @@ export class SolarPumpService{
                     )
                 }
             }
+            // else{
+            //   return this.commonService.errorMessage(
+            //     [],
+            //     existingSolarPumps.message,
+            //     existingSolarPumps.statusCode
+            //   )
+            // }
 
           let resp = await this.solarPumpRepository.update({ ref_id: id }, body);
           console.log("resp",resp)

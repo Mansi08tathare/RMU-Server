@@ -133,6 +133,16 @@ export class PumpCodeService{
       async updatePumpCode(body: any, id: number) {
         try {
 
+          let ref_id = await this.pumpCodeRepository.find({where:{ref_id:id}})
+            //console.log("ref_id",ref_id)
+            if(ref_id.length===0){
+              return this.commonService.errorMessage(
+                [],
+                CONSTANT_MSG.REF_ID_DOES_NOT_PRESENT,
+                HttpStatus.NOT_FOUND
+              )
+            }
+
             let existingPumpCodes = await this.getPumpCodeByCode(body.code);
              console.log("up",existingPumpCodes.data[0])
             if (existingPumpCodes.statusCode === HttpStatus.OK) {

@@ -165,7 +165,11 @@ export const CONSTANT_MSG = {
     PUMPMODEL_UPDATED_SUCCESSFULLY:'pump model update sucessfully',
     SOLARPUMP_ALREADY_EXIST:'solar pump already exist',
     SOLARPUMP_SAVED_SUCCESSFULLY:'solar pump saved successfully',
-    SOLARPUMP_UPDATED_SUCCESSFULLY:'solar pump updated successfully'
+    SOLARPUMP_UPDATED_SUCCESSFULLY:'solar pump updated successfully',
+    REF_ID_DOES_NOT_PRESENT:'ref_id does not exist',
+    UNABLE_TO_ADD_USER:'unable to add user',
+    ADDED_USER_SUCCESSFULLY:'added user successfully'
+
 
 
 
