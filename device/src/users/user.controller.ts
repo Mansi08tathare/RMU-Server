@@ -41,4 +41,40 @@ export class UserController{
         }
     }
 
+    @MessagePattern({cmd:'deleteUser'})
+    async deleteUser(id:number){
+        try{
+            console.log("id mp",id)
+          let user = await this.userService.deleteUser(id)
+          console.log("resp",user)
+          return user;
+        }catch(err){
+            return err;
+        }
+    }
+
+    @MessagePattern({cmd:'updateUser'})
+    async updateUser(data:{id:number,body:any}){
+        try{
+            const{id,body}=data;
+          //console.log("id mp",id)
+          let user = await this.userService.updateUser(id,body)
+          return user;
+        }catch(err){
+            return err
+        }
+    }
+
+    @MessagePattern({ cmd: 'login' })
+    async login(data: { email: string; password: string }) {
+      try {
+        console.log("data", data)
+       let resp = await this.userService.login(data);
+       console.log("resp",resp)
+       return resp
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
 }

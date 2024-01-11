@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { Role } from './role.entity';
 import { CommonService } from 'src/device/services/common-service';
 import { CONSTANT_MSG } from 'src/common-dto/const';
+import { compare } from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -14,14 +15,14 @@ export class UserService {
     private readonly commonService: CommonService,
   ) {
     // this.findOneWithEmail('akshay@gmail.com');
-   // this.getUser()
-   this.getUserById(16)
+    // this.getUser()
+    this.getUserById(121);
   }
 
   async addUser(body: any) {
     try {
       let exist = await this.findOneWithEmail(body.email);
-      console.log('exist');
+      console.log('exist', exist);
       if (exist.statusCode === HttpStatus.NOT_FOUND) {
         let user = await this.userRepository.save(body);
 
@@ -40,6 +41,12 @@ export class UserService {
             HttpStatus.CREATED,
           );
         }
+      } else {
+        return await this.commonService.errorMessage(
+          [],
+          exist.message,
+          exist.statusCode,
+        );
       }
     } catch (err) {
       console.log('Err', err);
@@ -71,22 +78,26 @@ export class UserService {
       let queryn;
       if (query === null) {
         queryn = 0;
-      }
-      console.log('queryn', queryn);
-      query = queryn;
-      if (Object.keys(query).length === 0) {
-        return this.commonService.errorMessage(
-          [],
-          CONSTANT_MSG.ID_NOT_FOUND,
-          HttpStatus.NOT_FOUND,
-        );
+        // }
+        console.log('enter in null');
+        console.log('queryn', queryn);
+        // query = queryn;
+        if (Object.keys(queryn).length === 0) {
+          return this.commonService.errorMessage(
+            [],
+            CONSTANT_MSG.ID_NOT_FOUND,
+            HttpStatus.NOT_FOUND,
+          );
+        }
       } else if (Object.keys(query).length > 0 || query) {
+        console.log('enter in successfull');
         return this.commonService.successMessage(
           query,
-          CONSTANT_MSG.FETCH_SUCCESSFULLY,
-          HttpStatus.OK,
+          CONSTANT_MSG.EMAIL_ALREADY_EXIST,
+          HttpStatus.CONFLICT,
         );
       } else {
+        console.log('enter in fetch error');
         return this.commonService.errorMessage(
           [],
           CONSTANT_MSG.FETCH_ERROR,
@@ -108,24 +119,25 @@ export class UserService {
 
   async getUser() {
     try {
-    //   let user = await this.userRepository.find();
-    let user = await this.userRepository .createQueryBuilder('a')
-    .select([
-      'a.ref_id as ref_id',
-      'a.name as name',
-      'a.password as password',
-      'a.email as email',
-      'a.mobile as mobile',
-      'a.department as department',
-      'b.role as role',
-      'c.name as agency',
-    ])
-    .innerJoin('roles_tbl', 'b', 'a.role = b.ref_id')
-    .leftJoin('agency_master_tbl', 'c', 'a.agency = c.ref_id')
-     .getRawMany();
-    
-      console.log("user",user)
-    //   console.log("length",user.length)
+      //   let user = await this.userRepository.find();
+      let user = await this.userRepository
+        .createQueryBuilder('a')
+        .select([
+          'a.ref_id as ref_id',
+          'a.name as name',
+          'a.password as password',
+          'a.email as email',
+          'a.mobile as mobile',
+          'a.department as department',
+          'b.role as role',
+          'c.name as agency',
+        ])
+        .innerJoin('roles_tbl', 'b', 'a.role = b.ref_id')
+        .leftJoin('agency_master_tbl', 'c', 'a.agency = c.ref_id')
+        .getRawMany();
+
+      console.log('user', user);
+      //   console.log("length",user.length)
       if (user.length > 0) {
         return this.commonService.successMessage(
           user,
@@ -148,29 +160,39 @@ export class UserService {
     }
   }
 
-  async getUserById(id:number){
-    try{
-    //   let user = await this.userRepository.find({where:{ref_id:id}})
-    let user = await this.userRepository
-    .createQueryBuilder('a')
-    .select([
-      'a.ref_id as ref_id',
-      'a.name as name',
-      'a.password as password',
-      'a.email as email',
-      'a.mobile as mobile',
-      'a.department as department',
-      'b.role as role',
-      'c.name as agency',
-    ])
-    .innerJoin('roles_tbl', 'b', 'a.role = b.ref_id')
-    .leftJoin('agency_master_tbl', 'c', 'a.agency = c.ref_id')
-    .where('a.ref_id = :id', { id })
-    
-    .getRawOne()
-    console.log("USE",user)
-
-      if (user.length > 0) {
+  async getUserById(id: number) {
+    try {
+      //   let user = await this.userRepository.find({where:{ref_id:id}})
+      let user = await this.userRepository
+        .createQueryBuilder('a')
+        .select([
+          'a.ref_id as ref_id',
+          'a.name as name',
+          'a.password as password',
+          'a.email as email',
+          'a.mobile as mobile',
+          'a.department as department',
+          'b.role as role',
+          'c.name as agency',
+        ])
+        .innerJoin('roles_tbl', 'b', 'a.role = b.ref_id')
+        .leftJoin('agency_master_tbl', 'c', 'a.agency = c.ref_id')
+        .where('a.ref_id = :id', { id })
+        .getRawOne();
+      console.log('user', user);
+      let usr;
+      if (user === undefined) {
+        usr = 0;
+        return this.commonService.errorMessage(
+          [],
+          CONSTANT_MSG.USER_DOES_NOT_EXIST,
+          HttpStatus.NOT_FOUND,
+        );
+      }
+      user = usr;
+      console.log('USE', Object.keys(user).length);
+      // console.log("user",user.length)
+      if (Object.keys(user).length > 0) {
         return this.commonService.successMessage(
           user,
           CONSTANT_MSG.FETCH_SUCCESSFULLY,
@@ -183,13 +205,145 @@ export class UserService {
           HttpStatus.BAD_REQUEST,
         );
       }
-    }catch(err){
-        return this.commonService.errorMessage(
-            [],
-            CONSTANT_MSG.INTERNAL_SERVER_ERR,
-            HttpStatus.INTERNAL_SERVER_ERROR,
-          );
-        }
+    } catch (err) {
+      return this.commonService.errorMessage(
+        [],
+        CONSTANT_MSG.INTERNAL_SERVER_ERR,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
+  async deleteUser(id: number) {
+    try {
+      // console.log("idd",id)
+      let exist = await this.userRepository.find({ where: { ref_id: id } });
+      if (exist.length === 0) {
+        return this.commonService.errorMessage(
+          [],
+          CONSTANT_MSG.USER_DOES_NOT_EXIST,
+          HttpStatus.NOT_FOUND,
+        );
+      }
+      let resp = await this.userRepository.delete({ ref_id: id });
+      //console.log("resp",resp)
+      if (resp.affected > 0) {
+        return this.commonService.successMessage(
+          [],
+          CONSTANT_MSG.DELETED_USER_SUCCSSFULLY,
+          HttpStatus.OK,
+        );
+      } else {
+        return this.commonService.errorMessage(
+          [],
+          CONSTANT_MSG.ERROR_WHILE_DELETING,
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+    } catch (err) {
+      console.log('err', err);
+      return this.commonService.errorMessage(
+        [],
+        CONSTANT_MSG.INTERNAL_SERVER_ERR,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  async updateUser(id: number, body: any) {
+    try {
+      let exist = await this.userRepository.find({ where: { ref_id: id } });
+      if (exist.length === 0) {
+        return this.commonService.errorMessage(
+          [],
+          CONSTANT_MSG.USER_DOES_NOT_EXIST,
+          HttpStatus.NOT_FOUND,
+        );
+      }
+      let resp = await this.userRepository.update({ ref_id: id }, body);
+      if (resp.affected > 0) {
+        return this.commonService.successMessage(
+          [],
+          CONSTANT_MSG.USER_UPDATED_SUCCESSFULLY,
+          HttpStatus.ACCEPTED,
+        );
+      } else {
+        return this.commonService.errorMessage(
+          [],
+          CONSTANT_MSG.FAILED_TO_UPDATE,
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+    } catch (err) {
+      return this.commonService.errorMessage(
+        [],
+        CONSTANT_MSG.INTERNAL_SERVER_ERR,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  async login(data: { email: string; password: string }) {
+    try {
+      const { email, password } = data;
+
+      // let user = await this.userRepository.findOne({ where: { email: email } });
+      let user = await this.userRepository
+        .createQueryBuilder('a')
+        .select([
+          //'a.ref_id as ref_id',
+          'a.name as name',
+          'a.password as password',
+          'a.email as email',
+          'a.department as department',
+          'b.role as role',
+        ])
+        .innerJoin(Role, 'b', 'a.role = b.ref_id')
+        .where('a.email = :email', { email })
+        .getRawOne();
+      console.log('user', user);
+      console.log('Data received in login method:', data);
+
+      if (!user) {
+        // return { loggedIn: false, user: null, password, role: null };
+        return this.commonService.errorMessage(
+          [],
+          CONSTANT_MSG.USER_DOES_NOT_EXIST,
+          HttpStatus.NOT_FOUND,
+        );
+      }
+      //.trim() to remove space
+      // const isPasswordValid = await compare(password, user.password);
+      console.log('Stored Password:', user.password);
+      console.log('Provided Password:', password);
+
+      const isPasswordValid = password === user.password;
+      console.log('Password Comparison Result:', isPasswordValid);
+
+      console.log(isPasswordValid, 'passvalid');
+      if (!isPasswordValid) {
+        // return { loggedIn: false, user: null, password, role: null };
+        return this.commonService.errorMessage(
+          [],
+          CONSTANT_MSG.PASSWORD_DOES_NOT_MATCH,
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+     
+      return this.commonService.successMessage(
+        user,
+        CONSTANT_MSG.FETCH_SUCCESSFULLY,
+        HttpStatus.OK
+      )
+      // return { loggedIn: true, user, password, role: user.role,id:user.id };
+      //return { loggedIn: true, user };
+    } catch (err) {
+      console.log('err', err);
+      return this.commonService.errorMessage(
+        [],
+        CONSTANT_MSG.INTERNAL_SERVER_ERR,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+}

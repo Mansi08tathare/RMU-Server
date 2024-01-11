@@ -1,6 +1,7 @@
 import { Agency } from 'src/masters/agency_masters/agency.entity'
 import {Entity,Column,PrimaryGeneratedColumn,ManyToOne,JoinColumn} from 'typeorm'
 import { Role } from './role.entity';
+import { Matches } from 'class-validator';
 
 @Entity({name:'users_tbl'})
 export class User{
@@ -17,6 +18,7 @@ export class User{
     @Column({name:'email'})
     email:string
 
+    @Matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/, { message: 'Invalid password format' })
     @Column({name:'password'})
     password:string
 

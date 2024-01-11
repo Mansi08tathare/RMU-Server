@@ -39,5 +39,7 @@ export const CONSTANT_MSG = {
   Client_NOT_FOUND: 'client not found',
   IMEI_OK: 'successfully retrieve imei',
   IMEI_NOT_FOUND: 'imei not found',
-  SUCCESSFULLY_UPDATED_AGENCY:'successfully updated agency'
+  SUCCESSFULLY_UPDATED_AGENCY:'successfully updated agency',
+  TOKEN_GENERATED_SUCCESSFULLY:'token generated successfully',
+  INVALID_CREDENTIALS:'invalid creds'
 };

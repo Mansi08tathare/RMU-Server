@@ -12,7 +12,7 @@ import { VendorService } from './portals/vendors/vendor.service';
 import { SimController } from './sim/sim.controller';
 import { SimService } from './sim/sim.service';
 import { ConfigController } from './config/config.controller';
-import { ConfigService } from './config/config.service';
+import { ConfigsService } from './config/config.service';
 import { AgencyMasterController } from './masters/agency_master/agency.controller';
 import { AgencyMasterService } from './masters/agency_master/agency.service';
 import { ControllerMasterController } from './masters/controller_master/controller.controller';
@@ -33,6 +33,15 @@ import { SolarPumpController } from './masters/solar_pump/solar_pump.controller'
 import { SolarPumpService } from './masters/solar_pump/solar_pump.service';
 import { UserController } from './users/user.controller';
 import { UserService } from './users/user.service';
+import { FarmerController } from './configurations/farmers/farmer.controller';
+import { FarmerService } from './configurations/farmers/farmer.service';
+import { PumpSiteController } from './configurations/pump-site/pump-site.controller';
+import { PumpSiteService } from './configurations/pump-site/pump-site.service';
+import { UserModule } from './users/user.module';
+import { JwtModule } from '@nestjs/jwt';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { CommonService } from './common-service/common-service';
+
 
 @Module({
   imports: [ 
@@ -45,8 +54,16 @@ import { UserService } from './users/user.service';
           port: 3001,
         },
       },
-    ]),DeviceModule,RIDModule],
-  controllers: [AppController,StateController,VendorController,SimController,ConfigController,AgencyMasterController,ControllerMasterController,MotorController,OemController,ProjectController,PumpCodeController,PumpHeadController,PumpModelController,SolarPumpController,UserController],
-  providers: [AppService,HealthCheckMicroservicesService,StateService,VendorService,SimService,ConfigService,AgencyMasterService,ControllerMasterService,MotorService,OemService,ProjectService,PumpCodeService,PumpHeadService,PumpModelService,SolarPumpService,UserService],
+    ]),
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        secret: configService.get<string>('JWT_SECRET'),
+        signOptions: { expiresIn: configService.get<string>('JWT_EXPIRES_IN') },
+      }),
+      inject: [ConfigService],
+    }),DeviceModule,RIDModule,UserModule],
+  controllers: [AppController,StateController,VendorController,SimController,ConfigController,AgencyMasterController,ControllerMasterController,MotorController,OemController,ProjectController,PumpCodeController,PumpHeadController,PumpModelController,SolarPumpController,UserController,FarmerController,PumpSiteController],
+  providers: [AppService,HealthCheckMicroservicesService,StateService,VendorService,SimService,ConfigsService,AgencyMasterService,ControllerMasterService,MotorService,OemService,ProjectService,PumpCodeService,PumpHeadService,PumpModelService,SolarPumpService,UserService,FarmerService,PumpSiteService,CommonService],
 })
 export class AppModule {}

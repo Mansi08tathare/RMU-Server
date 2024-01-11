@@ -2,7 +2,7 @@ import { Inject, Injectable } from "@nestjs/common";
 import { ClientProxy } from "@nestjs/microservices";
 
 @Injectable()
-export class ConfigService {
+export class ConfigsService {
   constructor(
     @Inject('DEVICE_SERVICE')
     private readonly deviceProxy: ClientProxy

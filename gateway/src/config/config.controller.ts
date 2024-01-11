@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Req, Res } from "@nestjs/common";
-import { ConfigService } from "./config.service";
+import { ConfigsService } from "./config.service";
 import { CONSTANT_MSG } from "src/common-dto/const";
 import { ApiTags, ApiResponse, ApiParam, ApiBody } from "@nestjs/swagger";
 import { ConfigurationDto } from "./dtos/config.dto";
@@ -9,7 +9,7 @@ import { UpdateConfigDto } from "./dtos/updateConfig.dto";
 @ApiTags('Config')
 export class ConfigController{
     constructor(
-        private readonly configService:ConfigService
+        private readonly configService:ConfigsService
     ){ }
 
     @Get('')

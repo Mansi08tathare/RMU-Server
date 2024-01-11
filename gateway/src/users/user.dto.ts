@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsPhoneNumber, IsString, Matches, MinLength } from 'class-validator';
 
 export class UserDto {
   @IsNotEmpty()
@@ -11,18 +11,27 @@ export class UserDto {
   @IsEmail()
   email: string;
 
+  @IsString()
   @IsNotEmpty()
+  //@MinLength(8)
+ @Matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/, { message: 'Invalid password format' })
   password: string;
 
+  @IsString()
   @IsNotEmpty()
   name: string;
 
+  @IsString()
   @IsNotEmpty()
+  // @IsPhoneNumber()
   mobile: number;
 
+  @IsString()
   @IsNotEmpty()
   agency: number;
 
+  @IsString()
   @IsNotEmpty()
   department: string;
 }
+
