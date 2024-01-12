@@ -19,6 +19,7 @@ async function bootstrap() {
     .setTitle('RMU Server')
     .setDescription(' API Description')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, options);

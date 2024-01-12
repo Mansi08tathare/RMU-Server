@@ -1,15 +1,24 @@
+import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty } from "class-validator";
 
-export class SimDto{
-    @IsNotEmpty()
-    simno:number;
+export class SimDto {
 
+    @ApiProperty()
     @IsNotEmpty()
-    operator:string;
+    simno: number;
 
-    @IsNotEmpty()
-    mobileno:number;
 
+    @ApiProperty()
     @IsNotEmpty()
-    rid:number;
+    operator: string;
+
+
+    @ApiProperty()
+    @IsNotEmpty()
+    mobileno: number;
+
+
+    @ApiProperty()
+    @IsNotEmpty()
+    rid: number;
 }

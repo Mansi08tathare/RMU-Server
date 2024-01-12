@@ -1,7 +1,8 @@
 import { Agency } from 'src/masters/agency_masters/agency.entity'
-import {Entity,Column,PrimaryGeneratedColumn,ManyToOne,JoinColumn} from 'typeorm'
+import {Entity,Column,PrimaryGeneratedColumn,ManyToOne,JoinColumn,ManyToMany,JoinTable} from 'typeorm'
 import { Role } from './role.entity';
 import { Matches } from 'class-validator';
+import { Rid } from 'src/device/entities/rid.entity';
 
 @Entity({name:'users_tbl'})
 export class User{
@@ -36,5 +37,9 @@ export class User{
 
     @Column({name:'department'})
     department:string
+
+    @ManyToMany(()=>Rid,rid =>rid.users)
+    @JoinTable({name:'user_rids'})
+    rids:Rid
 
 }

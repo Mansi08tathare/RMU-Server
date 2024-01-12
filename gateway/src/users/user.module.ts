@@ -5,6 +5,7 @@ import { UserService } from './user.service';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { CommonService } from 'src/common-service/common-service';
+import { AuthGuard } from './auth.guard';
 
 
 @Module({
@@ -28,6 +29,6 @@ import { CommonService } from 'src/common-service/common-service';
         inject: [ConfigService],
       }),],
   controllers: [UserController],
-  providers: [UserService,ConfigService,CommonService],
+  providers: [UserService,ConfigService,CommonService,AuthGuard],
 })
 export class UserModule {}

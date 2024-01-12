@@ -22,10 +22,14 @@ import { PumpCodeMaster } from 'src/masters/pump_code_master/pump_code.entity';
 import { PumpHeadMaster } from 'src/masters/pump_head_master/pump_head.entity';
 import { PumpModel } from 'src/masters/pump_model_master/pump_model.entity';
 import { SolarPump } from 'src/masters/solar_pump/solar_pump.entity';
-import { User } from 'src/users/user.entity';
-import { Role } from 'src/users/role.entity';
+import { User } from 'src/users/entities/user.entity';
+import { Role } from 'src/users/entities/role.entity';
 import { ProjectDetails } from 'src/configurations/farmers/farmer.entity';
 import { PumpSite } from 'src/configurations/pump site/pump_site.entity';
+import { Permission } from 'src/users/entities/permission.entity';
+import { UserRid } from 'src/users/entities/users_rid.entity';
+import { YearMonth } from 'src/device/entities/year_month.entity';
+import { DateEntity } from 'src/device/entities/date.entity';
 
 
 export default class TypeOrmConfig {
@@ -38,7 +42,7 @@ export default class TypeOrmConfig {
       password: configService.get('DB_PASSWORD'),
       database: configService.get('DB_NAME'),
       migrations:['migrations/**'],
-      entities: [Device,Rid,RidConfig,DeviceRid,ConfigTable,FlowFormula,Invalid,ReconfigurationDetail,ReconfigurationOldConfig,State,Vendor,Sim,RidSim,Agency,ControllerMaster,Motor,OEM,ProjectMaster,PumpCodeMaster,PumpHeadMaster,PumpModel,SolarPump,User,Role,ProjectDetails,PumpSite],
+      entities: [Device,Rid,RidConfig,DeviceRid,ConfigTable,FlowFormula,Invalid,ReconfigurationDetail,ReconfigurationOldConfig,State,Vendor,Sim,RidSim,Agency,ControllerMaster,Motor,OEM,ProjectMaster,PumpCodeMaster,PumpHeadMaster,PumpModel,SolarPump,User,Role,ProjectDetails,PumpSite,Permission,UserRid,YearMonth,DateEntity],
       
         // other configurations
         "logging": true,

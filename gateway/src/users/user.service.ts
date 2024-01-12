@@ -74,15 +74,20 @@ export class UserService {
           const response = await this.deviceProxy.send({ cmd: 'login' }, { email, password }).toPromise();
           console.log("gw data ", response)
           console.log("response",response)
-        //  if (response && response.loggedIn){
+        
+          // let permissions = await this.deviceProxy.send({cmd:'getUserPermissions'},)
+          
+          
+          //  if (response && response.loggedIn){
          if(response && response.statusCode === HttpStatus.OK) {
             let jwtPl = {
               username: email,
             //   role: response.user.role,
-            role: response.role,
+            role: response.data.role,
              
               // id:response.user.id
             }
+            console.log(response.role,response.data.role)
             const token = this.generateToken(jwtPl);
             console.log("token:", token)
              return this.commonService.successMessage(
@@ -94,10 +99,12 @@ export class UserService {
           } else {
             return this.commonService.errorMessage(
                 [],
-                CONSTANT_MSG.INVALID_CREDENTIALS,
-                HttpStatus.UNAUTHORIZED
+                // CONSTANT_MSG.INVALID_CREDENTIALS,
+                // HttpStatus.UNAUTHORIZED
+                response.message,
+                response.statusCode
             )
-            // throw new UnauthorizedException('Invalid credentials');
+           
           }
         } catch (err) {
           console.log(err)

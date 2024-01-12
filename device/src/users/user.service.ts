@@ -1,11 +1,14 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from './user.entity';
+import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
-import { Role } from './role.entity';
+import { Role } from './entities/role.entity';
 import { CommonService } from 'src/device/services/common-service';
 import { CONSTANT_MSG } from 'src/common-dto/const';
 import { compare } from 'bcrypt';
+import { Permission } from './entities/permission.entity';
+import { Rid } from 'src/device/entities/rid.entity';
+import { UserRid } from './entities/users_rid.entity';
 
 @Injectable()
 export class UserService {
@@ -13,10 +16,17 @@ export class UserService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly commonService: CommonService,
+    @InjectRepository(Permission)
+    private readonly permissionRepository: Repository<Permission>,
+    @InjectRepository(Rid)
+    private readonly ridRepository: Repository<Rid>,
+    @InjectRepository(UserRid)
+    private readonly userRidRespository: Repository<UserRid>
   ) {
     // this.findOneWithEmail('akshay@gmail.com');
     // this.getUser()
-    this.getUserById(121);
+    //this.getUserById(121);
+    this.getUserRids(16);
   }
 
   async addUser(body: any) {
@@ -291,7 +301,7 @@ export class UserService {
       let user = await this.userRepository
         .createQueryBuilder('a')
         .select([
-          //'a.ref_id as ref_id',
+          'a.ref_id as ref_id',
           'a.name as name',
           'a.password as password',
           'a.email as email',
@@ -329,12 +339,16 @@ export class UserService {
           HttpStatus.BAD_REQUEST,
         );
       }
-     
+
+      let permissions = await this.getUserPermission(user.ref_id);
+
+      let user_rids = await this.getUserRids(user.ref_id);
+
       return this.commonService.successMessage(
         user,
         CONSTANT_MSG.FETCH_SUCCESSFULLY,
-        HttpStatus.OK
-      )
+        HttpStatus.OK,
+      );
       // return { loggedIn: true, user, password, role: user.role,id:user.id };
       //return { loggedIn: true, user };
     } catch (err) {
@@ -344,6 +358,71 @@ export class UserService {
         CONSTANT_MSG.INTERNAL_SERVER_ERR,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
+    }
+  }
+
+  async getUserPermission(user_id: any) {
+    try {
+      let query = await this.permissionRepository.find({
+        where: { user_id: user_id },
+      });
+      if (query.length > 0) {
+        return this.commonService.successMessage(
+          query,
+          CONSTANT_MSG.FETCH_SUCCESSFULLY,
+          HttpStatus.OK,
+        );
+      } else {
+        return this.commonService.errorMessage(
+          [],
+          CONSTANT_MSG.FETCH_ERROR,
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+    } catch (err) {
+      console.log('err', err);
+      return this.commonService.errorMessage(
+        [],
+        CONSTANT_MSG.INTERNAL_SERVER_ERR,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  async getUserRids(user_id: any) {
+    try {
+      console.log('user_id', user_id);
+      //let query = await this.userRidRespository.find({ where: user_id })
+      //console.log("query", query)
+
+      // let results1 = await this.userRidRespository
+      //   .createQueryBuilder('userRid')
+      //   .select('rid.*')  
+      //   .innerJoin('userRid.user', 'user')
+      //   .innerJoin('userRid.rid', 'rid')
+      //   .where('user.id = :user_id', { user_id })  
+      //   .getRawMany();
+
+      // console.log("result1",results1)
+
+
+      let results = await this.userRidRespository
+        // .createQueryBuilder('rid')
+        // .select('rid.*')
+        // .innerJoin('rid.users', 'userRid', 'rid.rid = userRid.rid')
+        // // .where('userRid.user_id = :user_id', { user_id: user_id })
+        // .where('userRid.user = :user_id', { user_id })
+        // .getRawMany();
+      .createQueryBuilder('userRid')
+      .select('rid.*')
+      .innerJoin('userRid.rid', 'rid')
+      .innerJoin('userRid.user', 'user')
+      .where('user.ref_id = :user_id', { user_id }) 
+      .getRawMany();
+
+      console.log('Result', results);
+    } catch (err) {
+      console.log(err, 'err');
     }
   }
 }

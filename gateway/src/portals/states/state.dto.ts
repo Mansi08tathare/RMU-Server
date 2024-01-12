@@ -1,12 +1,19 @@
+import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty } from "class-validator";
 
-export class StateDto{
-    @IsNotEmpty()
-    name:string;
+export class StateDto {
 
+    @ApiProperty()
     @IsNotEmpty()
-    url:string;
+    name: string;
 
+
+    @ApiProperty()
     @IsNotEmpty()
-    sid:number
+    url: string;
+
+
+    @ApiProperty()
+    @IsNotEmpty()
+    sid: number
 }

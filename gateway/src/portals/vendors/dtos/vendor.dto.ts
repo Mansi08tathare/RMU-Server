@@ -1,16 +1,25 @@
+import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty } from "class-validator";
 
-export class VendorDto{
+export class VendorDto {
 
-    @IsNotEmpty()
-    state_id:number;
 
+    @ApiProperty()
     @IsNotEmpty()
-    name:string;
+    state_id: number;
 
-    @IsNotEmpty()
-    username:string;
 
+    @ApiProperty()
     @IsNotEmpty()
-    password:string;
+    name: string;
+
+
+    @ApiProperty()
+    @IsNotEmpty()
+    username: string;
+
+
+    @ApiProperty()
+    @IsNotEmpty()
+    password: string;
 }

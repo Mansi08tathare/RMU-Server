@@ -1,9 +1,14 @@
+import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty } from "class-validator";
 
-export class RidDto{
-    @IsNotEmpty()
-    rid:string;
+export class RidDto {
 
+    @ApiProperty()
     @IsNotEmpty()
-    CONT_MFR:number
+    rid: string;
+
+
+    @ApiProperty()
+    @IsNotEmpty()
+    CONT_MFR: number
 }

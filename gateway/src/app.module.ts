@@ -41,6 +41,7 @@ import { UserModule } from './users/user.module';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { CommonService } from './common-service/common-service';
+import { AuthGuard } from './users/auth.guard';
 
 
 @Module({
@@ -64,6 +65,6 @@ import { CommonService } from './common-service/common-service';
       inject: [ConfigService],
     }),DeviceModule,RIDModule,UserModule],
   controllers: [AppController,StateController,VendorController,SimController,ConfigController,AgencyMasterController,ControllerMasterController,MotorController,OemController,ProjectController,PumpCodeController,PumpHeadController,PumpModelController,SolarPumpController,UserController,FarmerController,PumpSiteController],
-  providers: [AppService,HealthCheckMicroservicesService,StateService,VendorService,SimService,ConfigsService,AgencyMasterService,ControllerMasterService,MotorService,OemService,ProjectService,PumpCodeService,PumpHeadService,PumpModelService,SolarPumpService,UserService,FarmerService,PumpSiteService,CommonService],
+  providers: [AppService,HealthCheckMicroservicesService,StateService,VendorService,SimService,ConfigsService,AgencyMasterService,ControllerMasterService,MotorService,OemService,ProjectService,PumpCodeService,PumpHeadService,PumpModelService,SolarPumpService,UserService,FarmerService,PumpSiteService,CommonService,AuthGuard,ConfigService],
 })
 export class AppModule {}

@@ -1,4 +1,4 @@
-import { User } from 'src/users/user.entity';
+import { User } from 'src/users/entities/user.entity';
 import { Entity, PrimaryGeneratedColumn, Column ,OneToMany} from 'typeorm' ;
 
 @Entity({name:'agency_master_tbl'})

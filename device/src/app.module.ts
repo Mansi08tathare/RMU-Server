@@ -23,6 +23,8 @@ import { SolarPumpModule } from './masters/solar_pump/solar_pump.module';
 import { UserModule } from './users/user.module';
 import { FarmerModule } from './configurations/farmers/farmer.module';
 import { PumpSiteModule } from './configurations/pump site/pump_site.module';
+import { ConfigService } from './config-api/configs.service';
+import { CommonService } from './device/services/common-service';
 
 @Module({
   imports: [ 

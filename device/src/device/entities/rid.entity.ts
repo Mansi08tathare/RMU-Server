@@ -2,6 +2,8 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable } from 'typeorm';
 import { Device } from './device.entity';
 import { Sim } from './sim.entity';
+import { User } from 'src/users/entities/user.entity';
+
 
 @Entity({ name: 'rid_tbl' })
 export class Rid {
@@ -20,7 +22,12 @@ export class Rid {
 
   @ManyToMany(()=>Sim,sim=>sim.rids)
   @JoinTable({name:'rid_sim_tbl'})
-  sims:Sim
+  sims:Sim;
+
+  @ManyToMany(()=>User,user => user.rids)
+  @JoinTable({name:'user_rids'})
+  users:User
+
 }
 
 

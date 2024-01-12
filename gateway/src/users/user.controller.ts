@@ -1,18 +1,10 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  HttpStatus,
-  Param,
-  Post,
-  Put,
-  Res,
-} from '@nestjs/common';
+import {Body,Controller,Delete,Get,HttpStatus,Param,Post,Put,Res,UseGuards} from '@nestjs/common';
 import { UserService } from './user.service';
 import { CONSTANT_MSG } from 'src/common-dto/const';
-import { ApiTags, ApiBody, ApiResponse, ApiParam } from '@nestjs/swagger';
-import { UserDto } from './user.dto';
+import { ApiTags, ApiBody, ApiResponse, ApiParam, ApiBearerAuth } from '@nestjs/swagger';
+import { UserDto } from './dtos/user.dto';
+import { AuthGuard } from './auth.guard';
+import { LoginDto } from './dtos/login.dto';
 
 @ApiTags('User')
 @Controller('user')
@@ -43,6 +35,8 @@ export class UserController {
     }
   }
 
+  @UseGuards(AuthGuard)
+ @ApiBearerAuth()
   @Get('')
   @ApiResponse({ status: HttpStatus.OK, description: 'User retrieved successfully', type: Object })
   @ApiResponse({ status: HttpStatus.CONFLICT, description: 'User retrieval failed' })
@@ -156,7 +150,7 @@ export class UserController {
   //login
 
   @Post('/login')
-  //@ApiBody({ type: UserDto })
+  @ApiBody({ type: LoginDto })
   async loginUser(@Body() userDto: { email: string; password: string },@Res() res:any) {
     try {
       console.log(userDto);
