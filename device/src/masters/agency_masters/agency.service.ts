@@ -127,22 +127,29 @@ export class AgencyMasterService {
 
   async updateAgency(body: any, id: number) {
     try {
-
-      let ref_id = await this.agencyRepository.find({where:{ref_id:id}})
-            //console.log("ref_id",ref_id)
-            if(ref_id.length===0){
-              return this.commonService.errorMessage(
-                [],
-                CONSTANT_MSG.REF_ID_DOES_NOT_PRESENT,
-                HttpStatus.NOT_FOUND
-              )
-            }
+      let ref_id = await this.agencyRepository.find({ where: { ref_id: id } });
+      //console.log("ref_id",ref_id)
+      if (ref_id.length === 0) {
+        return this.commonService.errorMessage(
+          [],
+          CONSTANT_MSG.REF_ID_DOES_NOT_PRESENT,
+          HttpStatus.NOT_FOUND,
+        );
+      }
+      console.log('ref_id', ref_id);
       let resp = await this.agencyRepository
         .createQueryBuilder()
         .update(Agency)
         .set(body)
-        .where('ref_id=:id', { id })
+        .where('ref_id = :id', { id })
         .execute();
+
+      // console.log("body",body)
+      // let resp1= await this.agencyRepository.update({ref_id:id},body)
+      //   console.log("rsp",resp1)
+
+      //console.log(resp.raw[0],"detailed")
+      console.log('agency', resp);
       if (resp.affected > 0) {
         return this.commonService.successMessage(
           [],
@@ -166,31 +173,28 @@ export class AgencyMasterService {
     }
   }
 
-    async deleteAgency(id:number){
-    try{
-
-        let resp = await this.agencyRepository.delete({ref_id:id})
-        if(resp.affected>0){
-            return this.commonService.successMessage(
-                [],
-                CONSTANT_MSG.ID_DELETED_SUCCESSFULLY,
-                HttpStatus.NO_CONTENT
-            )
-        }else{
-            return this.commonService.errorMessage(
-                [],
-                CONSTANT_MSG.ERROR_WHILE_DELETING,
-                HttpStatus.BAD_REQUEST
-            )
-        }
-
-    }catch(err){
+  async deleteAgency(id: number) {
+    try {
+      let resp = await this.agencyRepository.delete({ ref_id: id });
+      if (resp.affected > 0) {
+        return this.commonService.successMessage(
+          [],
+          CONSTANT_MSG.ID_DELETED_SUCCESSFULLY,
+          HttpStatus.NO_CONTENT,
+        );
+      } else {
         return this.commonService.errorMessage(
-            [],
-            CONSTANT_MSG.INTERNAL_SERVER_ERR,
-            HttpStatus.INTERNAL_SERVER_ERROR
-        )
-
+          [],
+          CONSTANT_MSG.ERROR_WHILE_DELETING,
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+    } catch (err) {
+      return this.commonService.errorMessage(
+        [],
+        CONSTANT_MSG.INTERNAL_SERVER_ERR,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 }
