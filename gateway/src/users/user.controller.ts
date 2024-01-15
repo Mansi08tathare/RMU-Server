@@ -3,8 +3,12 @@ import { UserService } from './user.service';
 import { CONSTANT_MSG } from 'src/common-dto/const';
 import { ApiTags, ApiBody, ApiResponse, ApiParam, ApiBearerAuth } from '@nestjs/swagger';
 import { UserDto } from './dtos/user.dto';
-import { AuthGuard } from './auth.guard';
+import { AuthGuard } from '../guards/auth.guard';
 import { LoginDto } from './dtos/login.dto';
+import { RolesGuard } from 'src/guards/role.guard';
+import { Roles } from 'src/decorator/role.decorator';
+import { UserRole } from 'src/enums/enum';
+
 
 @ApiTags('User')
 @Controller('user')
@@ -23,9 +27,9 @@ export class UserController {
           .status(HttpStatus.INTERNAL_SERVER_ERROR)
           .send({ error: 'Device Microservice ECONNREFUSED' });
       } else if (resp.statusCode === HttpStatus.CREATED) {
-        res.status(resp.statusCode).send({ success: resp.message });
+        res.status(resp.statusCode).send({status:resp.statusCode, message: resp.message });
       } else {
-        res.status(resp.statusCode).send({ error: resp.message });
+        res.status(resp.statusCode).send({status:resp.statusCode, error: resp.message });
       }
     } catch (err) {
       res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
@@ -36,7 +40,7 @@ export class UserController {
   }
 
   @UseGuards(AuthGuard)
- @ApiBearerAuth()
+  @ApiBearerAuth()
   @Get('')
   @ApiResponse({ status: HttpStatus.OK, description: 'User retrieved successfully', type: Object })
   @ApiResponse({ status: HttpStatus.CONFLICT, description: 'User retrieval failed' })
@@ -51,9 +55,9 @@ export class UserController {
       } else if (resp.statusCode === HttpStatus.OK) {
         res
           .status(resp.statusCode)
-          .send({ success: resp.message, data: resp.data });
+          .send({ status:resp.statusCode,message: resp.message, data: resp.data });
       } else {
-        res.status(resp.statusCode).send({ error: resp.message });
+        res.status(resp.statusCode).send({status:resp.statusCode, error: resp.message });
       }
     } catch (err) {
       res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
@@ -63,6 +67,10 @@ export class UserController {
     }
   }
 
+   @UseGuards(RolesGuard,AuthGuard)
+  // @Role(['admin']) 
+  //@UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(UserRole.SUPERADMIN)
   @Get('/:id')
   @ApiParam({ name: 'id', description: 'User ID' })
   @ApiResponse({ status: HttpStatus.OK, description: 'User retrieved successfully', type: Object })
@@ -70,6 +78,7 @@ export class UserController {
   async getUserById(@Res() res: any, @Param('id') id: number) {
     try {
       let resp = await this.userService.getUserById(id);
+      console.log("resp",resp)
       if (resp.code == 'ECONNREFUSED') {
         res
           .status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -77,9 +86,9 @@ export class UserController {
       } else if (resp.statusCode === HttpStatus.OK) {
         res
           .status(resp.statusCode)
-          .send({ success: resp.message, data: resp.data });
+          .send({ status:resp.statusCode,message:resp.message, data: resp.data });
       } else {
-        res.status(resp.statusCode).send({ error: resp.message });
+        res.status(resp.statusCode).send({ status:resp.statusCode,error: resp.message });
       }
     } catch (err) {
       res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
@@ -95,7 +104,7 @@ export class UserController {
   @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'User not found' })
   async deleteUser(@Res() res: any, @Param('id') id: number) {
     try {
-      //  console.log("id",id)
+   
       let resp = await this.userService.deleteUser(id);
       console.log('gw resp', resp);
       if (resp.code == 'ECONNREFUSED') {
@@ -103,9 +112,9 @@ export class UserController {
           .status(HttpStatus.INTERNAL_SERVER_ERROR)
           .send({ error: 'Device Microservice ECONNREFUSED' });
       } else if (resp.statusCode === HttpStatus.OK) {
-        res.status(resp.statusCode).send({ success: resp.message });
+        res.status(resp.statusCode).send({ status:resp.statusCode,message: resp.message });
       } else {
-        res.status(resp.statusCode).send({ error: resp.message });
+        res.status(resp.statusCode).send({ status:resp.statusCode,error: resp.message });
       }
     } catch (err) {
       console.log('err', err);
@@ -135,9 +144,9 @@ export class UserController {
           .status(HttpStatus.INTERNAL_SERVER_ERROR)
           .send({ error: 'Device Microservice ECONNREFUSED' });
       } else if (resp.statusCode === HttpStatus.ACCEPTED) {
-        res.status(resp.statusCode).send({ success: resp.message });
+        res.status(resp.statusCode).send({ status:resp.statusCode,message: resp.message });
       } else {
-        res.status(resp.statusCode).send({ error: resp.message });
+        res.status(resp.statusCode).send({ status:resp.statusCode,error: resp.message });
       }
     } catch (err) {
       res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
@@ -155,33 +164,27 @@ export class UserController {
     try {
       console.log(userDto);
       const resp = await this.userService.loginUser(userDto);
-      // if (resp.code == 'ECONNREFUSED') {
-      //   res
-      //     .status(HttpStatus.INTERNAL_SERVER_ERROR)
-      //     .send({ error: 'Device Microservice ECONNREFUSED' });
-      // } else
-       if (resp.statusCode === HttpStatus.OK) {
+
+      if (resp.code == 'ECONNREFUSED') {
+        res
+          .status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .send({ error: 'Device Microservice ECONNREFUSED' });
+      } else if (resp.statusCode === HttpStatus.OK) {
         res
           .status(resp.statusCode)
-          .send({ success: resp.message, data: resp.data.access_token });
+          .send({ status:resp.statusCode,message: resp.message, data: resp.data });
       } else {
-        res.status(resp.statusCode).send({ error: resp.message });
-      
+        res.status(resp.statusCode).send({ status:resp.statusCode, error: resp.message });
       }
       console.log("resp",resp)
-      // res.status(HttpStatus.OK).send({
-      //   message: 'token generated successfully',
-      //   statusCode: true,
-      //   data:resp
-      // });
-     // return resp
+   
     } catch (err) {
       console.error('Login Error:', err);
       res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
         message: CONSTANT_MSG.INTERNAL_SERVER_ERR,
         statusCode: false,
       });
-     // return err
+   
     }
 
   }

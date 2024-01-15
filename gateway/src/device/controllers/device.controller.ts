@@ -34,7 +34,7 @@ export class DeviceController {
       } else {
         console.log('gateway');
         console.log(device.statusCode, device.message);
-        res.status(device.statusCode).send({ message: device.message });
+        res.status(device.statusCode).send({status:device.statusCode, message: device.message });
       }
     } catch (err) {
       res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
@@ -83,7 +83,7 @@ export class DeviceController {
       console.log(resp.statusCode, resp.message);
       res
         .status(resp.statusCode)
-        .send({ message: resp.message, data: resp.data });
+        .send({ status:resp.statusCode,message: resp.message, data: resp.data });
     }
   }catch(err){
     console.log("gc",err)
@@ -111,7 +111,7 @@ export class DeviceController {
       console.log(resp.statusCode, resp.message);
       res
         .status(resp.statusCode)
-        .send({ message: resp.message, data: resp.data });
+        .send({ status:resp.statusCode,message: resp.message, data: resp.data });
     }
   }
 
@@ -132,7 +132,7 @@ export class DeviceController {
       console.log(resp.statusCode, resp.message);
       res
         .status(resp.statusCode)
-        .send({ message: resp.message, data: resp.data });
+        .send({status:resp.statusCode, message: resp.message, data: resp.data });
     }
   }
 
@@ -167,7 +167,7 @@ export class DeviceController {
       console.log(resp.statusCode, resp.message);
       res
         .status(resp.statusCode)
-        .send({ message: resp.message, data: resp.data });
+        .send({status:resp.statusCode, message: resp.message, data: resp.data });
     }
     // console.log('update reg resp',resp)
     // res.status(resp.status).send(resp);
@@ -196,9 +196,9 @@ async deleteSimDetail(@Param() param:any,@Req() req:any ,@Res() res:any){
     console.log(resp.statusCode, resp.message);
     res
       .status(resp.statusCode)
-      .send({ message: resp.message});
+      .send({status:resp.statusCode, message: resp.message});
   } else{
-    res.status(resp.statusCode).send({error:resp.message});
+    res.status(resp.statusCode).send({status:resp.statusCode,error:resp.message});
   }
 }catch(err){
   console.log(err)

@@ -30,9 +30,9 @@ export class RIDController {
         // console.log("td", resp)
         res
           .status(resp.statusCode)
-          .send({ success: resp.message, data: resp.data });
+          .send({ status:resp.statusCode,message: resp.message,data: resp.data });
       } else {
-        res.status(resp.statusCode).send({ error: resp.message });
+        res.status(resp.statusCode).send({status:resp.statusCode, error: resp.message });
       }
     } catch (err) {
       // console.error("c", err)
@@ -60,9 +60,9 @@ export class RIDController {
         // console.log("td", config)
         res
           .status(config.statusCode)
-          .send({ success: config.message, data: config.data });
+          .send({status:config.statusCode, message: config.message, data:config.data });
       } else {
-        res.status(config.statusCode).send({ error: config.message });
+        res.status(config.statusCode).send({status:config.statusCode, error: config.message });
       }
     } catch (err) {
       // console.error("c", err)
@@ -91,9 +91,9 @@ export class RIDController {
     } else if(resp.statusCode === HttpStatus.OK){
       res
       .status(resp.statusCode)
-      .send({success:resp.message,data:resp.data})
+      .send({status:resp.statusCode,message:resp.message,data:resp.data})
     }else{
-    res.status(resp.statusCode).send({error:resp.message});
+    res.status(resp.statusCode).send({status:resp.statusCode,error:resp.message});
     }
   }catch(err){
     console.log(err)
@@ -120,9 +120,9 @@ export class RIDController {
   } else if(resp.statusCode == HttpStatus.NO_CONTENT){
     res
       .status(resp.statusCode)
-      .send({success:resp.message})
+      .send({status:resp.statusCode,message:resp.message})
   }else{
-    res.status(res.statusCode).send({error:resp.message});
+    res.status(res.statusCode).send({status:resp.statusCode,error:resp.message});
   }
   
   }catch(err){
@@ -155,9 +155,9 @@ export class RIDController {
    }else if(resp.statusCode == HttpStatus.ACCEPTED){
     res
       .status(resp.statusCode)
-      .send({success:resp.message})
+      .send({status:resp.statusCode,message:resp.message})
    } else{
-    res.status(res.statusCode).send({error:resp.message})
+    res.status(res.statusCode).send({status:resp.statusCode,error:resp.message})
    }
    //console.log(resp)
   }catch(err){
@@ -186,9 +186,9 @@ export class RIDController {
   // res.status(resp.statusCode).send(resp.data)
    res
     .status(resp.statusCode)
-    .send({success:resp.message,data:resp.data})
+    .send({status:resp.statusCode,message:resp.message,data:resp.data})
    } else{
-    res.status(res.statusCode).send({error:resp.message})
+    res.status(res.statusCode).send({status:resp.statusCode,error:resp.message})
    }
   }catch(err){
     console.log(err)

@@ -41,7 +41,7 @@ import { UserModule } from './users/user.module';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { CommonService } from './common-service/common-service';
-import { AuthGuard } from './users/auth.guard';
+import { AuthGuard } from './guards/auth.guard';
 
 
 @Module({

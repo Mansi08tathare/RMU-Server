@@ -20,10 +20,10 @@ export class DeviceStatusService {
     //   imei_id: 89,
     // });
 
-    // this.getDeviceData('2023',72)
+    this.getDeviceData('2023',72)
 
     //working
-    this.getLastADODeviceData(92)
+    //this.getLastADODeviceData(92)
   }
 
   async addDeviceData(data: any) {
@@ -127,46 +127,40 @@ export class DeviceStatusService {
     }
   }
 
+  //.........
   async getDeviceData(year: string, id: number) {
     try {
-      let query = await this.yearMonthRepository
+      
+      const result = await this.yearMonthRepository
+      .createQueryBuilder('ym')
+      .select([
+        'ym.month',
+        'ym.year',
+        `(SELECT JSON_ARRAYAGG(JSON_OBJECT("date", CONCAT_WS("/", d.date, ym.month, ym.year), "ado", d.ado)) FROM date d WHERE d.ym_id = ym.id ORDER BY CAST(d.date AS SIGNED INTEGER) ASC) as days`,
+      ])
+      .where('ym.year = :year', { year })
+      .andWhere('ym.imei_id = :id', { id })
+      .orderBy('ym.month', 'ASC')
+      .getOne();
+    
 
-        .createQueryBuilder('ym')
-        .select([
-          'ym.month',
-          'ym.year',
-          `(SELECT JSON_ARRAYAGG(
-            JSON_OBJECT('date', CONCAT_WS("/", d.date, ym.month, ym.year), 'ado', d.ado)
-          ) FROM date d WHERE d.ym_id = ym.id ORDER BY CAST(d.date AS SIGNED INTEGER) ASC) AS days`,
-        ])
-        .where('ym.year = :year', { year: year })
-        .andWhere('ym.imei_id = :id', { id: id })
-        .orderBy('ym.month', 'ASC')
-        .printSql()
-        .getRawOne();
-
-      console.log('getDeviceData', query);
-      const queryBuilder = this.yearMonthRepository.createQueryBuilder('ym');
-
-      const subquery = this.dateRepository
-        .createQueryBuilder('d')
-        .select('JSON_ARRAYAGG(JSON_OBJECT("date", CONCAT_WS("/", d.date, ym.month, ym.year), "ado", d.ado))', 'days')
-        .where('d.ym_id = ym.id')
-        .orderBy('CAST(d.date as SIGNED INTEGER)', 'ASC')
-        .getQuery();
-  
-        console.log("subbbbquery",subquery)
-
-      const result = await queryBuilder
-        .select([
-          'JSON_OBJECT("month", ym.month, "year", ym.year, "days", (' + subquery + ')) as data',
-        ])
-        .where('ym.year = :year', { year })
-        .andWhere('ym.imei_id = :id', { id })
-        .orderBy('ym.month', 'ASC')
-        .getRawOne();
-  
-      console.log("result" ,result.data)
+      const result1 = await this.yearMonthRepository
+      .createQueryBuilder('ym')
+      .select([
+        'ym.month as month',
+        'ym.year as year',
+        'JSON_ARRAYAGG(JSON_OBJECT("date", CONCAT_WS("/", d.date, ym.month, ym.year), "ado", d.ado)) as days',
+      ])
+      .leftJoin('date', 'd', 'd.ym_id = ym.id')
+      .where('ym.year = :year', { year })
+      .andWhere('ym.imei_id = :id', { id })
+      .groupBy('ym.id')
+      .orderBy('ym.month', 'ASC')
+      .getRawMany();
+          console.log("result" ,result)
+          console.log("result1",result1)
+        
+     
     } catch (err) {
         console.log("err",err)
         return err 

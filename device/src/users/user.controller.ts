@@ -35,6 +35,7 @@ export class UserController{
     async getUserById(id:number){
         try{
          let user = await this.userService.getUserById(id)
+         console.log("user",user)
          return user
         }catch(err){
             return err
@@ -74,6 +75,7 @@ export class UserController{
        return resp
       } catch (error) {
         console.log(error)
+        return error
       }
     }
 

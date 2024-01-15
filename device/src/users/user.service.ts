@@ -21,12 +21,14 @@ export class UserService {
     @InjectRepository(Rid)
     private readonly ridRepository: Repository<Rid>,
     @InjectRepository(UserRid)
-    private readonly userRidRespository: Repository<UserRid>
+    private readonly userRidRepository: Repository<UserRid>
   ) {
     // this.findOneWithEmail('akshay@gmail.com');
     // this.getUser()
     //this.getUserById(121);
-    this.getUserRids(16);
+   // this.getUserRids(13);
+   // this.getUserPermission(2)
+    
   }
 
   async addUser(body: any) {
@@ -189,7 +191,7 @@ export class UserService {
         .leftJoin('agency_master_tbl', 'c', 'a.agency = c.ref_id')
         .where('a.ref_id = :id', { id })
         .getRawOne();
-      console.log('user', user);
+      console.log('user us', user);
       let usr;
       if (user === undefined) {
         usr = 0;
@@ -199,8 +201,9 @@ export class UserService {
           HttpStatus.NOT_FOUND,
         );
       }
-      user = usr;
-      console.log('USE', Object.keys(user).length);
+      
+      // user = usr;
+      console.log('USER', Object.keys(user).length);
       // console.log("user",user.length)
       if (Object.keys(user).length > 0) {
         return this.commonService.successMessage(
@@ -341,11 +344,14 @@ export class UserService {
       }
 
       let permissions = await this.getUserPermission(user.ref_id);
+      console.log("permission",permissions.data)
 
       let user_rids = await this.getUserRids(user.ref_id);
+      console.log("user_rids",user_rids)
 
+      let per=permissions.data
       return this.commonService.successMessage(
-        user,
+        {user,per,user_rids},
         CONSTANT_MSG.FETCH_SUCCESSFULLY,
         HttpStatus.OK,
       );
@@ -353,11 +359,12 @@ export class UserService {
       //return { loggedIn: true, user };
     } catch (err) {
       console.log('err', err);
-      return this.commonService.errorMessage(
-        [],
-        CONSTANT_MSG.INTERNAL_SERVER_ERR,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      return err
+      // return this.commonService.errorMessage(
+      //   err,
+      //   CONSTANT_MSG.INTERNAL_SERVER_ERR,
+      //   HttpStatus.INTERNAL_SERVER_ERROR,
+      // );
     }
   }
 
@@ -366,6 +373,8 @@ export class UserService {
       let query = await this.permissionRepository.find({
         where: { user_id: user_id },
       });
+
+      console.log("permission_query",query)
       if (query.length > 0) {
         return this.commonService.successMessage(
           query,
@@ -392,37 +401,41 @@ export class UserService {
   async getUserRids(user_id: any) {
     try {
       console.log('user_id', user_id);
-      //let query = await this.userRidRespository.find({ where: user_id })
-      //console.log("query", query)
-
-      // let results1 = await this.userRidRespository
-      //   .createQueryBuilder('userRid')
-      //   .select('rid.*')  
-      //   .innerJoin('userRid.user', 'user')
-      //   .innerJoin('userRid.rid', 'rid')
-      //   .where('user.id = :user_id', { user_id })  
-      //   .getRawMany();
-
-      // console.log("result1",results1)
+     
 
 
-      let results = await this.userRidRespository
-        // .createQueryBuilder('rid')
-        // .select('rid.*')
-        // .innerJoin('rid.users', 'userRid', 'rid.rid = userRid.rid')
-        // // .where('userRid.user_id = :user_id', { user_id: user_id })
-        // .where('userRid.user = :user_id', { user_id })
-        // .getRawMany();
-      .createQueryBuilder('userRid')
-      .select('rid.*')
-      .innerJoin('userRid.rid', 'rid')
-      .innerJoin('userRid.user', 'user')
-      .where('user.ref_id = :user_id', { user_id }) 
-      .getRawMany();
+      let query = await this.ridRepository
+      .createQueryBuilder('a')
+      // .select(['a.*']) .... not work
+      .select(['a.ref_id', 'a.rid', 'a.cont_mfr'])
+      .innerJoin(UserRid, 'b', 'a.rid = b.rid')
+      .where('b.user_id = :user_id', { user_id })
+      .getMany();
+ 
+      console.log(query.length,"len")
 
-      console.log('Result', results);
+      console.log('getUserRid', query);
+      if (query.length > 0) {
+        return this.commonService.successMessage(
+          query,
+          CONSTANT_MSG.FETCH_SUCCESSFULLY,
+          HttpStatus.OK,
+        );
+      } else {
+        return this.commonService.errorMessage(
+          [],
+          CONSTANT_MSG.FETCH_ERROR,
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
     } catch (err) {
       console.log(err, 'err');
+      return this.commonService.errorMessage(
+        [],
+        CONSTANT_MSG.INTERNAL_SERVER_ERR,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 }

@@ -33,9 +33,9 @@ export class SolarPumpController{
           } else if (resp.statusCode === HttpStatus.OK) {
             res
               .status(resp.statusCode)
-              .send({ success: resp.message, data: resp.data });
+              .send({ status:resp.statusCode,message: resp.message,data: resp.data });
           } else {
-            res.status(resp.statusCode).send({ error: resp.message });
+            res.status(resp.statusCode).send({ status:resp.statusCode,error: resp.message });
           }
 
         }catch(err){
@@ -68,9 +68,9 @@ export class SolarPumpController{
               } else if (resp.statusCode === HttpStatus.OK) {
                 res
                   .status(resp.statusCode)
-                  .send({ success: resp.message, data: resp.data });
+                  .send({status:resp.statusCode, message: resp.message, data: resp.data });
               } else {
-                res.status(resp.statusCode).send({ error: resp.message });
+                res.status(resp.statusCode).send({ status:resp.statusCode,error: resp.message });
               }
 
         }catch(err){
@@ -103,9 +103,9 @@ export class SolarPumpController{
           } else if (resp.statusCode === HttpStatus.CREATED) {
             res
               .status(resp.statusCode)
-              .send({ success: resp.message });
+              .send({ status:resp.statusCode,message: resp.message });
           } else {
-            res.status(resp.statusCode).send({ error: resp.message });
+            res.status(resp.statusCode).send({status:resp.statusCode, error: resp.message });
           }
 
         }catch(err){
@@ -141,9 +141,9 @@ export class SolarPumpController{
             .status(HttpStatus.INTERNAL_SERVER_ERROR)
             .send({ error: 'Device Microservice ECONNREFUSED' });
         } else if (resp.statusCode === HttpStatus.ACCEPTED) {
-          res.status(resp.statusCode).send({ success: resp.message });
+          res.status(resp.statusCode).send({ status:resp.statusCode,message: resp.message });
         } else {
-          res.status(resp.statusCode).send({ error: resp.message });
+          res.status(resp.statusCode).send({ status:resp.statusCode,error: resp.message });
         }
       } catch (err) {
         console.log("err",err)
@@ -173,9 +173,9 @@ export class SolarPumpController{
             .status(HttpStatus.INTERNAL_SERVER_ERROR)
             .send({ error: 'Device Microservice ECONNREFUSED' });
         } else if (resp.statusCode === HttpStatus.NO_CONTENT) {
-          res.status(resp.statusCode).send({ success: resp.message });
+          res.status(resp.statusCode).send({status:resp.statusCode, message: resp.message });
         } else {
-          res.status(resp.statusCode).send({ error: resp.message });
+          res.status(resp.statusCode).send({ status:resp.statusCode,error: resp.message });
         }
       } catch (err) {
         res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
