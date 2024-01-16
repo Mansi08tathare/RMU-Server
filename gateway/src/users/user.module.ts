@@ -29,6 +29,6 @@ import { AuthGuard } from '../guards/auth.guard';
         inject: [ConfigService],
       }),],
   controllers: [UserController],
-  providers: [UserService,ConfigService,CommonService,AuthGuard],
+  providers: [UserService,ConfigService,CommonService],
 })
 export class UserModule {}

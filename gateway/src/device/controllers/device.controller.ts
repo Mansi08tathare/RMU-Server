@@ -98,6 +98,7 @@ export class DeviceController {
   @ApiParam({name:'ref_id'})
   @ApiOperation({ summary: 'Get device by ref_id' })
   async getRegDeviceById(@Res() res: any, @Param() param: any) {
+    try{
     console.log('ref_id', param.ref_id);
 
     let ref_id = param.ref_id;
@@ -113,13 +114,19 @@ export class DeviceController {
         .status(resp.statusCode)
         .send({ status:resp.statusCode,message: resp.message, data: resp.data });
     }
+  }catch(err){
+    res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
+      message: CONSTANT_MSG.INTERNAL_SERVER_ERR,
+      statusCode: false,
+    });
+  }
   }
 
   @Get('regDevice/imei/:imei')
   @ApiOperation({ summary: 'Get device by IMEI' })
   async getRegDeviceByImei(@Res() res: any, @Param() param: any) {
     // console.log("res",res)
-   
+   try{
     console.log('imei', param.imei);
     let imei = param.imei;
     let resp = await this.deviceService.getRegDeviceByImei(imei);
@@ -134,21 +141,14 @@ export class DeviceController {
         .status(resp.statusCode)
         .send({status:resp.statusCode, message: resp.message, data: resp.data });
     }
+  }catch(err){
+    res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
+      message: CONSTANT_MSG.INTERNAL_SERVER_ERR,
+      statusCode: false,
+    });
+  }
   }
 
-  //no working
-  // @Get('refid/:deviceRefId')
-  // async getRefId(@Param() param:any){
-  //   try{
-  //     let deviceRefId = param.deviceRefId
-  //     let resp = await this.deviceService.getRefId(deviceRefId);
-  //     return resp
-  //   }catch(err)
-  //   {
-  //     console.log(err)
-  //     return "error"
-  //   }
-  // }
 
   @Put('/register')
   @ApiOperation({ summary: 'Update a registered device' })

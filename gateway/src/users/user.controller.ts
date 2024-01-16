@@ -19,7 +19,7 @@ export class UserController {
   @ApiBody({ type:UserDto })
   @ApiResponse({ status: HttpStatus.CREATED, description: 'User created successfully' })
   @ApiResponse({ status: HttpStatus.CONFLICT, description: 'User creation failed' })
-  async addUser(@Res() res: any, @Body() body: any) {
+  async addUser(@Res() res: any, @Body() body: UserDto) {
     try {
       let resp = await this.userService.addUser(body);
       if (resp.code == 'ECONNREFUSED') {
@@ -67,9 +67,10 @@ export class UserController {
     }
   }
 
-   @UseGuards(RolesGuard,AuthGuard)
+  
   // @Role(['admin']) 
   //@UseGuards(AuthGuard('jwt'), RolesGuard)
+  @UseGuards(RolesGuard,AuthGuard)
   @Roles(UserRole.SUPERADMIN)
   @Get('/:id')
   @ApiParam({ name: 'id', description: 'User ID' })

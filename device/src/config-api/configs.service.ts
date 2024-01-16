@@ -72,7 +72,7 @@ export class ConfigService {
 
   async addConfig(body: any) {
     try {
-      console.log('body', body);
+     // console.log('body', body);
       let r = await this.ridService.getRIDbyID(body.rid);
       // console.log("r",r)
       // console.log("r",r.data)
@@ -161,8 +161,17 @@ export class ConfigService {
 
   async updateConfig(body: any, id: any) {
     try {
+
+      let exist = await this.configRepository.find({where:{ref_id:id}})
+      if(exist.length ===0){
+        return this.commonService.errorMessage(
+          [],
+          CONSTANT_MSG.REF_ID_DOES_NOT_PRESENT,
+          HttpStatus.NOT_FOUND
+        )
+      }
       console.log('updateConfig');
-      console.log('body', body, 'id', id);
+      //console.log('body', body, 'id', id);
       let mType = body.Motor_type;
       if (mType === 'BLDC') {
         mType = 'B';
@@ -330,6 +339,14 @@ export class ConfigService {
 
   async deleteConfig(id: number) {
     try {
+      let exist = await this.configRepository.find({where:{ref_id:id}})
+      if(exist.length === 0){
+        return this.commonService.errorMessage(
+          [],
+          CONSTANT_MSG.REF_ID_DOES_NOT_PRESENT,
+          HttpStatus.NOT_FOUND
+        )
+      }
       await this.ridService.deleteConfigRidEntry(id);
       let query = await this.configRepository.delete({ ref_id: id });
 

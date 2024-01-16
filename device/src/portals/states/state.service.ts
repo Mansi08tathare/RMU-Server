@@ -195,20 +195,29 @@ export class StateService {
   }
   
 
-  async updateState(body: any) {
+  async updateState(body: any,id:number) {
     try {
       console.log('body', body);
-      console.log('id', body.id);
-      let id = body.id;
+      // console.log('id', body.id);
+      // let id = body.id;
+
+      let exist= await this.stateRepository.find({where:{ref_id:id}})
+      console.log("exist",exist)
+      if(exist.length===0 || !exist){
+        return this.commonService.errorMessage(
+          [],
+          CONSTANT_MSG.REF_ID_DOES_NOT_PRESENT,
+          HttpStatus.NOT_FOUND
+        )
+      }else{
       let state = await this.stateRepository
         .createQueryBuilder()
-
         .update(State)
         .set({ name: body.name, url: body.url, sid: body.sid })
         .where('ref_id= :id', { id: id })
         .execute();
       console.log('state', state);
-      if (!state && state.affected ===0 ) {
+      if (!state || state.affected ===0 ) {
         return this.commonService.errorMessage(
           [],
           CONSTANT_MSG.FAILED_TO_UPDATE_STATE,
@@ -221,6 +230,7 @@ export class StateService {
           HttpStatus.ACCEPTED,
         );
       }
+    }
       //   return 'got in state service';
     } catch (err) {
       console.log(err);
@@ -290,6 +300,16 @@ export class StateService {
   /////..........not to use
   async deleteState(ref_id){
     try{
+      let exist= await this.stateRepository.find({where:{ref_id:ref_id}})
+      console.log("exist",exist)
+      if(exist.length===0 || !exist){
+        return this.commonService.errorMessage(
+          [],
+          CONSTANT_MSG.REF_ID_DOES_NOT_PRESENT,
+          HttpStatus.NOT_FOUND
+        )
+      }
+
       const deleteDevicesResult:DeleteResult = await this.deviceRepository.delete({ state: { ref_id } });
 
       if (deleteDevicesResult.affected === 0) {
@@ -300,6 +320,8 @@ export class StateService {
           HttpStatus.BAD_REQUEST
         );
       }
+
+  
      let resp :DeleteResult = await this.stateRepository.delete(ref_id)
      console.log("resp",resp)
      if(!resp ){

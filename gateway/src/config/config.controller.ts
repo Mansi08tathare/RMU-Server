@@ -105,7 +105,7 @@ export class ConfigController{
     @ApiResponse({ status: HttpStatus.INTERNAL_SERVER_ERROR, description: 'Internal server error' })
     async updateConfig(@Req() req:any,@Res() res:any,@Param('id') id:any,@Body() body:UpdateConfigDto){
       try{
-       console.log("gw",body,id)
+      //  console.log("gw",body,id)
        let resp = await this.configService.updateConfig(body,id);
        if (resp.code == 'ECONNREFUSED') {
         res

@@ -20,7 +20,7 @@ export class UserDto {
   @IsString()
   @IsNotEmpty()
   //@MinLength(8)
- @Matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/, { message: 'Invalid password format' })
+ @Matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{5,15}$/, { message: 'Invalid password format' })
   password: string;
 
   @ApiProperty()

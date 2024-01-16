@@ -138,6 +138,15 @@ export class PumpSiteService {
 
   async updatePumpSite(id:number,body:any){
     try{
+
+      let exist = await this.pumpSiteRepository.find({where:{ref_id:id}})
+      if(exist.length === 0){
+        return this.commonService.errorMessage(
+          [],
+          CONSTANT_MSG.REF_ID_DOES_NOT_PRESENT,
+          HttpStatus.NOT_FOUND
+        )
+      }
        let query = await this.pumpSiteRepository.update(
         {ref_id:id},
         body
@@ -169,6 +178,15 @@ export class PumpSiteService {
   async deletePumpSite(id:number){
     try{
         console.log("id",id)
+
+        let exist = await this.pumpSiteRepository.find({where:{ref_id:id}})
+        if(exist.length === 0){
+          return this.commonService.errorMessage(
+            [],
+            CONSTANT_MSG.REF_ID_DOES_NOT_PRESENT,
+            HttpStatus.NOT_FOUND
+          )
+        }
      let query = await this.pumpSiteRepository.delete(id)
        console.log("query",query)
      if(query.affected >0){

@@ -1,45 +1,50 @@
 import { Agency } from 'src/masters/agency_masters/agency.entity'
-import {Entity,Column,PrimaryGeneratedColumn,ManyToOne,JoinColumn,ManyToMany,JoinTable} from 'typeorm'
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, ManyToMany, JoinTable, OneToMany } from 'typeorm'
 import { Role } from './role.entity';
 import { Matches } from 'class-validator';
 import { Rid } from 'src/device/entities/rid.entity';
+import { Permission } from './permission.entity';
 
-@Entity({name:'users_tbl'})
-export class User{
+@Entity({ name: 'users_tbl' })
+export class User {
 
-    @PrimaryGeneratedColumn({name:'ref_id'})
-    ref_id:number
+  @PrimaryGeneratedColumn({ name: 'ref_id' })
+  ref_id: number
 
-    // @Column({name:'role'})
-    // role:number
-    @ManyToOne(() => Role, role => role.users)
+  // @Column({name:'role'})
+  // role:number
+  @ManyToOne(() => Role, role => role.users)
   @JoinColumn({ name: 'role' })
   role: Role;
 
-    @Column({name:'email'})
-    email:string
+  @Column({ name: 'email' })
+  email: string
 
-    @Matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/, { message: 'Invalid password format' })
-    @Column({name:'password'})
-    password:string
+  @Matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/, { message: 'Invalid password format' })
+  @Column({ name: 'password' })
+  password: string
 
-    @Column({name:'name'})
-    name:string
+  @Column({ name: 'name' })
+  name: string
 
-    @Column({name:'mobile'})
-    mobile:string
+  @Column({ name: 'mobile' })
+  mobile: string
 
-    // @Column({name:'agency'})
-    // agency:number
-    @ManyToOne(() => Agency, agency => agency.users)
+  // @Column({name:'agency'})
+  // agency:number
+  @ManyToOne(() => Agency, agency => agency.users)
   @JoinColumn({ name: 'agency' })
   agency: Agency;
 
-    @Column({name:'department'})
-    department:string
+  @Column({ name: 'department' })
+  department: string
 
-    @ManyToMany(()=>Rid,rid =>rid.users)
-    @JoinTable({name:'user_rids'})
-    rids:Rid
+  @ManyToMany(() => Rid, rid => rid.users)
+  @JoinTable({ name: 'user_rids' })
+  rids: Rid
+
+  //.
+  @OneToMany(() => Permission, permission => permission.user)
+  permissions: Permission[];
 
 }

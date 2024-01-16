@@ -42,9 +42,10 @@ export class VendorController{
    }
 
    @MessagePattern({cmd:'updateVendor'})
-   async updateVendor(body:any){
+   async updateVendor(data:{body:any,id:number}){
     try{
-        let vendor =await this.vendorService.updateVendor(body)
+        const{body,id}=data
+        let vendor =await this.vendorService.updateVendor(body,id)
         return vendor
 
     }catch(err){

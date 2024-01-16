@@ -48,10 +48,10 @@ export class VendorService {
     }
   }
 
-  async updateVendor(body: any) {
+  async updateVendor(body: any,id:number) {
     try {
       let resp = await this.deviceProxy
-        .send({ cmd: 'updateVendor' }, body)
+        .send({ cmd: 'updateVendor' }, {body,id})
         .toPromise();
       return resp;
     } catch (err) {

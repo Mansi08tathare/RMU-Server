@@ -187,6 +187,7 @@ export class RidService {
   //     );
   //   }
   // }
+
   async checkConfigRidExist(rid_ref_id: number): Promise<any> {
     try {
       console.log('s', rid_ref_id);
@@ -256,7 +257,15 @@ export class RidService {
 
   async deleteRid(id: number) {
     try {
-      console.log('ds id', id);
+
+      let exist = await this.ridRepository.find({where:{ref_id:id}})
+      if(!exist || exist.length ===0){
+        return this.commonService.errorMessage([],
+          CONSTANT_MSG.REF_ID_DOES_NOT_PRESENT,
+          HttpStatus.NOT_FOUND
+        )
+      }
+      // console.log('ds id', id);
       let query = await this.ridRepository.delete({ ref_id: id });
       console.log('query', query);
       if (!query || query[0].length > 0) {
@@ -288,6 +297,13 @@ export class RidService {
       // Object.keys(params).map((val,index)=>{
       //   formatUpdateData = formatUpdateData + (index === 0 ? " ":" ,") + val + " = '" + params[val] + "'"
       // });
+      let exist = await this.ridRepository.find({where:{ref_id:id}})
+      if(!exist || exist.length ===0){
+        return this.commonService.errorMessage([],
+          CONSTANT_MSG.REF_ID_DOES_NOT_PRESENT,
+          HttpStatus.NOT_FOUND
+        )
+      }
       let query = await this.ridRepository
         .createQueryBuilder()
         .update()

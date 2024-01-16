@@ -159,6 +159,16 @@ export class FarmerService {
 
       // console.log("respo",respo)
       // let exist = await this.farmerRepository.get
+       console.log("id-update",id)
+      let exist = await this.farmerRepository.find({where:{ref_id:id}})
+      console.log("exist",exist)
+      if(exist.length){
+        return this.commonService.errorMessage(
+          [],
+          CONSTANT_MSG.REF_ID_DOES_NOT_PRESENT,
+          HttpStatus.NOT_FOUND
+        )
+      }
      let resp = await this.farmerRepository.update(
       {ref_id:id},
       body
@@ -189,6 +199,14 @@ export class FarmerService {
 
   async deleteProject(id:number){
     try{
+      let exist = await this.farmerRepository.find({where:{ref_id:id}})
+      if(exist.length){
+        return this.commonService.errorMessage(
+          [],
+          CONSTANT_MSG.REF_ID_DOES_NOT_PRESENT,
+          HttpStatus.NOT_FOUND
+        )
+      } 
     let resp = await this.farmerRepository.delete({ref_id:id})
     console.log("resp",resp)
     if(resp.affected > 0){

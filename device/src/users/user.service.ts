@@ -5,7 +5,7 @@ import { Repository } from 'typeorm';
 import { Role } from './entities/role.entity';
 import { CommonService } from 'src/device/services/common-service';
 import { CONSTANT_MSG } from 'src/common-dto/const';
-import { compare } from 'bcrypt';
+import { compare, hash } from 'bcrypt';
 import { Permission } from './entities/permission.entity';
 import { Rid } from 'src/device/entities/rid.entity';
 import { UserRid } from './entities/users_rid.entity';
@@ -21,14 +21,13 @@ export class UserService {
     @InjectRepository(Rid)
     private readonly ridRepository: Repository<Rid>,
     @InjectRepository(UserRid)
-    private readonly userRidRepository: Repository<UserRid>
+    private readonly userRidRepository: Repository<UserRid>,
   ) {
     // this.findOneWithEmail('akshay@gmail.com');
     // this.getUser()
     //this.getUserById(121);
-   // this.getUserRids(13);
-   // this.getUserPermission(2)
-    
+    // this.getUserRids(13);
+    // this.getUserPermission(2)
   }
 
   async addUser(body: any) {
@@ -36,7 +35,21 @@ export class UserService {
       let exist = await this.findOneWithEmail(body.email);
       console.log('exist', exist);
       if (exist.statusCode === HttpStatus.NOT_FOUND) {
-        let user = await this.userRepository.save(body);
+        const newUser = new User();
+        newUser.email = body.email;
+        newUser.password = await hash(body.password, 10);
+        newUser.name = body.name;
+        newUser.mobile = body.mobile;
+        newUser.department = body.department;
+        newUser.role = body.role;
+        newUser.agency = body.agency;
+        newUser.rids = body.rids;
+        newUser.permissions = body.permissions;
+
+        let user = await this.userRepository.save(newUser);
+        // let hashedpassword = await hash(body.password,10)
+
+        // let user = await this.userRepository.save(body,hashedpassword);
 
         console.log('user', user);
         // console.log("length",user.data.length)
@@ -201,7 +214,6 @@ export class UserService {
           HttpStatus.NOT_FOUND,
         );
       }
-      
       // user = usr;
       console.log('USER', Object.keys(user).length);
       // console.log("user",user.length)
@@ -266,6 +278,7 @@ export class UserService {
   async updateUser(id: number, body: any) {
     try {
       let exist = await this.userRepository.find({ where: { ref_id: id } });
+      console.log('exist', exist);
       if (exist.length === 0) {
         return this.commonService.errorMessage(
           [],
@@ -273,7 +286,25 @@ export class UserService {
           HttpStatus.NOT_FOUND,
         );
       }
-      let resp = await this.userRepository.update({ ref_id: id }, body);
+      ///........password to hash
+      // if (body.password) {
+      //  let hashedPassword = await hash(body.password, 10);
+      //   body.password = hashedPassword;
+      // }
+
+      // let resp = await this.userRepository.update({ ref_id: id }, body);
+
+      let resp = await this.userRepository
+        .createQueryBuilder()
+        .update(User)
+        .set(body)
+        .where('ref_id = :id', { id })
+        // .printSql()
+        // .updateEntity(true)
+        .execute();
+
+      console.log('resp.raw', resp.raw);
+      console.log('resp', resp);
       if (resp.affected > 0) {
         return this.commonService.successMessage(
           [],
@@ -288,6 +319,7 @@ export class UserService {
         );
       }
     } catch (err) {
+      console.log('err', err);
       return this.commonService.errorMessage(
         [],
         CONSTANT_MSG.INTERNAL_SERVER_ERR,
@@ -325,12 +357,15 @@ export class UserService {
           HttpStatus.NOT_FOUND,
         );
       }
-      //.trim() to remove space
-      // const isPasswordValid = await compare(password, user.password);
+
       console.log('Stored Password:', user.password);
       console.log('Provided Password:', password);
 
-      const isPasswordValid = password === user.password;
+      // const isPasswordHashed = /^\$2[ayb]\$.{56}$/.test(password);
+
+      //const isPasswordValid = password === user.password;
+      const isPasswordValid = await compare(password, user.password);
+
       console.log('Password Comparison Result:', isPasswordValid);
 
       console.log(isPasswordValid, 'passvalid');
@@ -344,14 +379,14 @@ export class UserService {
       }
 
       let permissions = await this.getUserPermission(user.ref_id);
-      console.log("permission",permissions.data)
+      console.log('permission', permissions.data);
 
       let user_rids = await this.getUserRids(user.ref_id);
-      console.log("user_rids",user_rids)
+      console.log('user_rids', user_rids);
 
-      let per=permissions.data
+      let per = permissions.data;
       return this.commonService.successMessage(
-        {user,per,user_rids},
+        { user, per, user_rids },
         CONSTANT_MSG.FETCH_SUCCESSFULLY,
         HttpStatus.OK,
       );
@@ -359,7 +394,7 @@ export class UserService {
       //return { loggedIn: true, user };
     } catch (err) {
       console.log('err', err);
-      return err
+      return err;
       // return this.commonService.errorMessage(
       //   err,
       //   CONSTANT_MSG.INTERNAL_SERVER_ERR,
@@ -370,11 +405,14 @@ export class UserService {
 
   async getUserPermission(user_id: any) {
     try {
+      // let query = await this.permissionRepository.find({
+      //   where: { user_id: user_id },
+      // });
       let query = await this.permissionRepository.find({
-        where: { user_id: user_id },
+        where: { user: { ref_id: user_id } },
       });
 
-      console.log("permission_query",query)
+      console.log('permission_query', query);
       if (query.length > 0) {
         return this.commonService.successMessage(
           query,
@@ -401,18 +439,16 @@ export class UserService {
   async getUserRids(user_id: any) {
     try {
       console.log('user_id', user_id);
-     
-
 
       let query = await this.ridRepository
-      .createQueryBuilder('a')
-      // .select(['a.*']) .... not work
-      .select(['a.ref_id', 'a.rid', 'a.cont_mfr'])
-      .innerJoin(UserRid, 'b', 'a.rid = b.rid')
-      .where('b.user_id = :user_id', { user_id })
-      .getMany();
- 
-      console.log(query.length,"len")
+        .createQueryBuilder('a')
+        // .select(['a.*']) .... not work
+        .select(['a.ref_id', 'a.rid', 'a.cont_mfr'])
+        .innerJoin(UserRid, 'b', 'a.rid = b.rid')
+        .where('b.user_id = :user_id', { user_id })
+        .getMany();
+
+      console.log(query.length, 'len');
 
       console.log('getUserRid', query);
       if (query.length > 0) {
@@ -428,7 +464,6 @@ export class UserService {
           HttpStatus.BAD_REQUEST,
         );
       }
-
     } catch (err) {
       console.log(err, 'err');
       return this.commonService.errorMessage(

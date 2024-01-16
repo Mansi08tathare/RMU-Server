@@ -1,12 +1,17 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column,ManyToOne,JoinColumn } from 'typeorm';
+import { User } from './user.entity';
 
 @Entity('permission_tbl')
 export class Permission {
   @PrimaryGeneratedColumn()
   ref_id: number;
 
-  @Column()
-  user_id: number;
+  // @Column()
+  // user_id: number;
+  @ManyToOne(() => User, user => user.permissions)
+  @JoinColumn({ name: 'user_id' })
+  user: User;
+
 
   @Column({ length: 10, nullable: true })
   dashboard: string;

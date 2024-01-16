@@ -42,9 +42,11 @@ export class StateController {
   }
 
   @MessagePattern({ cmd: 'updateState' })
-  async updateState(body: any) {
+  async updateState(data:{body: any,id:number}) {
     try {
-      let state = await this.stateService.updateState(body);
+      const{body,id}=data
+      let state = await this.stateService.updateState(body,id);
+      console.log("state",state)
       return state;
     } catch (err) {
       // console.log(err)

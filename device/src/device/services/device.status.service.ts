@@ -15,12 +15,12 @@ export class DeviceStatusService {
     private readonly dateRepository: Repository<DateEntity>,
     private readonly commonService: CommonService,
   ) {
-    // this.addDeviceData({
-    //   timestamp: '2023-02-15T12:30:00.000Z',
-    //   imei_id: 89,
-    // });
+    this.addDeviceData({
+      timestamp: '2023-02-15T12:30:00.000Z',
+      imei_id: 89,
+    });
 
-    this.getDeviceData('2023',72)
+    //this.getDeviceData('2023',72)
 
     //working
     //this.getLastADODeviceData(92)
@@ -131,17 +131,17 @@ export class DeviceStatusService {
   async getDeviceData(year: string, id: number) {
     try {
       
-      const result = await this.yearMonthRepository
-      .createQueryBuilder('ym')
-      .select([
-        'ym.month',
-        'ym.year',
-        `(SELECT JSON_ARRAYAGG(JSON_OBJECT("date", CONCAT_WS("/", d.date, ym.month, ym.year), "ado", d.ado)) FROM date d WHERE d.ym_id = ym.id ORDER BY CAST(d.date AS SIGNED INTEGER) ASC) as days`,
-      ])
-      .where('ym.year = :year', { year })
-      .andWhere('ym.imei_id = :id', { id })
-      .orderBy('ym.month', 'ASC')
-      .getOne();
+      // const result = await this.yearMonthRepository
+      // .createQueryBuilder('ym')
+      // .select([
+      //   'ym.month',
+      //   'ym.year',
+      //   `(SELECT JSON_ARRAYAGG(JSON_OBJECT("date", CONCAT_WS("/", d.date, ym.month, ym.year), "ado", d.ado)) FROM date d WHERE d.ym_id = ym.id ORDER BY CAST(d.date AS SIGNED INTEGER) ASC) as days`,
+      // ])
+      // .where('ym.year = :year', { year })
+      // .andWhere('ym.imei_id = :id', { id })
+      // .orderBy('ym.month', 'ASC')
+      // .getOne();
     
 
       const result1 = await this.yearMonthRepository
@@ -157,7 +157,7 @@ export class DeviceStatusService {
       .groupBy('ym.id')
       .orderBy('ym.month', 'ASC')
       .getRawMany();
-          console.log("result" ,result)
+       
           console.log("result1",result1)
         
      

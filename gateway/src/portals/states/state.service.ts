@@ -42,10 +42,10 @@ export class StateService {
     }
   }
 
-  async updateState(body: any) {
+  async updateState(body: any,id:number) {
     try {
       let state = await this.deviceProxy
-        .send({ cmd: 'updateState' }, body)
+        .send({ cmd: 'updateState' },{body,id})
         .toPromise();
       return state;
     } catch (err) {

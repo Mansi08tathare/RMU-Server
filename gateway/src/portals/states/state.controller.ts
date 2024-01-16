@@ -93,13 +93,13 @@ export class StateController {
     }
   }
 
-  @Put('')
+  @Put('/:id')
   @ApiBody({ type: updateStateDto })
   @ApiResponse({ status: HttpStatus.NO_CONTENT, description: 'State updated successfully' })
   @ApiResponse({ status: HttpStatus.INTERNAL_SERVER_ERROR, description: 'Internal server error' })
-  async updateState(@Body() body: updateStateDto, @Res() res: any) {
+  async updateState(@Body() body: updateStateDto, @Res() res: any,@Param('id') id:number) {
     try {
-      let resp = await this.stateService.updateState(body);
+      let resp = await this.stateService.updateState(body,id);
       console.log('state', resp);
       if (resp.code === 'ECONNREFUSED') {
         res

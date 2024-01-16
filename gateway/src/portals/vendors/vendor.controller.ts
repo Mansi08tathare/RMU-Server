@@ -1,16 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpStatus,
-  Param,
-  Post,
-  Res,
-  Put,
-  Delete,
-  Req,
-} from '@nestjs/common';
-
+import { Body,Controller,Get, HttpStatus, Param, Post,Res,Put,Delete,Req} from '@nestjs/common';
 import { CONSTANT_MSG } from 'src/common-dto/const';
 import { VendorService } from './vendor.service';
 import { ApiTags, ApiResponse, ApiParam, ApiBody } from '@nestjs/swagger';
@@ -100,13 +88,13 @@ export class VendorController {
     }
   }
 
-  @Put('')
+  @Put('/:id')
   @ApiBody({ type: updateVendorDto }) 
   @ApiResponse({ status: HttpStatus.ACCEPTED, description: 'Vendor updated successfully' })
   @ApiResponse({ status: HttpStatus.INTERNAL_SERVER_ERROR, description: 'Internal server error' })
-  async updateVendor(@Res() res: any, @Body() body: updateVendorDto, @Param() param: any) {
+  async updateVendor(@Res() res: any, @Body() body: updateVendorDto, @Param('id') id: number) {
     try {
-      let resp = await this.vendorService.updateVendor(body);
+      let resp = await this.vendorService.updateVendor(body,id);
       if (resp.code == 'ECONNREFUSED') {
         res
           .status(HttpStatus.INTERNAL_SERVER_ERROR)

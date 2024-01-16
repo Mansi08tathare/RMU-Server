@@ -270,11 +270,21 @@ export class VendorService {
     }
   }
 
-  async updateVendor(body:any){
+  async updateVendor(body:any,id:number){
     try{
+      
      let name = body.name;
      name = name.toLowerCase();
-     let id=body.id;
+    //  let id=body.id;
+     let exist = await this.vendorRepository.find({where:{ref_id:id}})
+     if(exist.length===0){
+      return this.commonService.errorMessage(
+        [],
+        CONSTANT_MSG.REF_ID_DOES_NOT_PRESENT,
+        HttpStatus.NOT_FOUND
+      )
+     }
+
      let query = await this.vendorRepository.createQueryBuilder()
      .update(Vendor)
      .set(
@@ -309,6 +319,16 @@ export class VendorService {
 
   async deleteVendor(ref_id:number):Promise<any>{
     try{
+
+      let exist = await this.vendorRepository.find({where:{ref_id:ref_id}})
+      if(exist.length===0){
+       return this.commonService.errorMessage(
+         [],
+         CONSTANT_MSG.REF_ID_DOES_NOT_PRESENT,
+         HttpStatus.NOT_FOUND
+       )
+      }
+ 
     let vendor = await this.vendorRepository.delete(ref_id)
     console.log("vendor",vendor)
     if(!vendor || 
