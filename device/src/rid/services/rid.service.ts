@@ -18,7 +18,9 @@ export class RidService {
     // this.checkConfigRidExist(164)
     //this.checkConfigRidExist(7853)
     // this.getallRids()
+    this.getRIDbyID(23)
   }
+
 
   async addRID(rid: string, cont_mfr: string): Promise<any> {
     try {
@@ -91,14 +93,12 @@ export class RidService {
     }
   }
 
-  async getRIDbyID(id: any): Promise<any> {
+  async getRIDbyID(id: any): Promise<any|Rid> {
     try {
-      console.log('s', id);
+
       let query = await this.ridRepository.find({ where: { rid: id } });
       console.log('querry', query);
-      // console.log('q', query[0].ref_id);
-      // console.log('qu',query)
-      // if (!query ) {
+
       if (!query) {
         return this.commonService.errorMessage(
           [],
@@ -258,8 +258,8 @@ export class RidService {
   async deleteRid(id: number) {
     try {
 
-      let exist = await this.ridRepository.find({where:{ref_id:id}})
-      if(!exist || exist.length ===0){
+      let exist = await this.ridRepository.find({ where: { ref_id: id } })
+      if (!exist || exist.length === 0) {
         return this.commonService.errorMessage([],
           CONSTANT_MSG.REF_ID_DOES_NOT_PRESENT,
           HttpStatus.NOT_FOUND
@@ -297,8 +297,8 @@ export class RidService {
       // Object.keys(params).map((val,index)=>{
       //   formatUpdateData = formatUpdateData + (index === 0 ? " ":" ,") + val + " = '" + params[val] + "'"
       // });
-      let exist = await this.ridRepository.find({where:{ref_id:id}})
-      if(!exist || exist.length ===0){
+      let exist = await this.ridRepository.find({ where: { ref_id: id } })
+      if (!exist || exist.length === 0) {
         return this.commonService.errorMessage([],
           CONSTANT_MSG.REF_ID_DOES_NOT_PRESENT,
           HttpStatus.NOT_FOUND

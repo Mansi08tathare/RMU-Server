@@ -13,8 +13,10 @@ import {
     constructor(private jwtService: JwtService, private configService: ConfigService) { }
   
     async canActivate(context: ExecutionContext): Promise<boolean> {
+      console.log("AuthGuard")
       const request = context.switchToHttp().getRequest();
       const token = this.extractTokenFromHeader(request);
+      console.log("Token ",token)
       if (!token) {
         throw new UnauthorizedException();
       }
@@ -30,9 +32,6 @@ import {
     }
   
     private extractTokenFromHeader(request: Request): string | undefined {
-  
-  
-  
       const [type, token] = request.headers.authorization?.split(' ') ?? [];
       return type === 'Bearer' ? token : undefined;
     }

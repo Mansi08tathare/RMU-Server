@@ -1,4 +1,4 @@
-import {Body,Controller,Delete,Get,HttpStatus,Param,Post,Put,Res,UseGuards} from '@nestjs/common';
+import {Body,Controller,Delete,Get,HttpStatus,Param,Post,Put,Req,Res,UseGuards} from '@nestjs/common';
 import { UserService } from './user.service';
 import { CONSTANT_MSG } from 'src/common-dto/const';
 import { ApiTags, ApiBody, ApiResponse, ApiParam, ApiBearerAuth } from '@nestjs/swagger';
@@ -70,14 +70,15 @@ export class UserController {
   
   // @Role(['admin']) 
   //@UseGuards(AuthGuard('jwt'), RolesGuard)
-  @UseGuards(RolesGuard,AuthGuard)
-  @Roles(UserRole.SUPERADMIN)
+  @UseGuards(AuthGuard,RolesGuard)
+  @Roles(UserRole.ADMIN)
   @Get('/:id')
   @ApiParam({ name: 'id', description: 'User ID' })
   @ApiResponse({ status: HttpStatus.OK, description: 'User retrieved successfully', type: Object })
   @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'User not found' })
   async getUserById(@Res() res: any, @Param('id') id: number) {
     try {
+      console.log("id",id)
       let resp = await this.userService.getUserById(id);
       console.log("resp",resp)
       if (resp.code == 'ECONNREFUSED') {

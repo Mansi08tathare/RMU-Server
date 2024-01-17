@@ -23,11 +23,7 @@ export class UserService {
     @InjectRepository(UserRid)
     private readonly userRidRepository: Repository<UserRid>,
   ) {
-    // this.findOneWithEmail('akshay@gmail.com');
-    // this.getUser()
-    //this.getUserById(121);
-    // this.getUserRids(13);
-    // this.getUserPermission(2)
+   
   }
 
   async addUser(body: any) {
@@ -46,11 +42,10 @@ export class UserService {
         newUser.rids = body.rids;
         newUser.permissions = body.permissions;
 
+     
         let user = await this.userRepository.save(newUser);
-        // let hashedpassword = await hash(body.password,10)
-
-        // let user = await this.userRepository.save(body,hashedpassword);
-
+      
+    
         console.log('user', user);
         // console.log("length",user.data.length)
         if (Object.keys(user).length === 0 || !user) {
@@ -104,7 +99,7 @@ export class UserService {
       if (query === null) {
         queryn = 0;
         // }
-        console.log('enter in null');
+      
         console.log('queryn', queryn);
         // query = queryn;
         if (Object.keys(queryn).length === 0) {
@@ -115,7 +110,7 @@ export class UserService {
           );
         }
       } else if (Object.keys(query).length > 0 || query) {
-        console.log('enter in successfull');
+       
         return this.commonService.successMessage(
           query,
           CONSTANT_MSG.EMAIL_ALREADY_EXIST,
@@ -204,6 +199,8 @@ export class UserService {
         .leftJoin('agency_master_tbl', 'c', 'a.agency = c.ref_id')
         .where('a.ref_id = :id', { id })
         .getRawOne();
+
+        const { password, ...userWithoutPassword } = user
       console.log('user us', user);
       let usr;
       if (user === undefined) {
@@ -219,7 +216,8 @@ export class UserService {
       // console.log("user",user.length)
       if (Object.keys(user).length > 0) {
         return this.commonService.successMessage(
-          user,
+          // user,
+          userWithoutPassword,
           CONSTANT_MSG.FETCH_SUCCESSFULLY,
           HttpStatus.OK,
         );
@@ -278,7 +276,7 @@ export class UserService {
   async updateUser(id: number, body: any) {
     try {
       let exist = await this.userRepository.find({ where: { ref_id: id } });
-      console.log('exist', exist);
+     
       if (exist.length === 0) {
         return this.commonService.errorMessage(
           [],
@@ -328,9 +326,9 @@ export class UserService {
     }
   }
 
-  async login(data: { email: string; password: string }) {
+  async login( email: string, password: string) {
     try {
-      const { email, password } = data;
+      // const { email, password } = data;
 
       // let user = await this.userRepository.findOne({ where: { email: email } });
       let user = await this.userRepository
@@ -347,10 +345,8 @@ export class UserService {
         .where('a.email = :email', { email })
         .getRawOne();
       console.log('user', user);
-      console.log('Data received in login method:', data);
-
+   
       if (!user) {
-        // return { loggedIn: false, user: null, password, role: null };
         return this.commonService.errorMessage(
           [],
           CONSTANT_MSG.USER_DOES_NOT_EXIST,
@@ -365,6 +361,7 @@ export class UserService {
 
       //const isPasswordValid = password === user.password;
       const isPasswordValid = await compare(password, user.password);
+     
 
       console.log('Password Comparison Result:', isPasswordValid);
 

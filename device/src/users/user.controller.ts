@@ -69,8 +69,9 @@ export class UserController{
     @MessagePattern({ cmd: 'login' })
     async login(data: { email: string; password: string }) {
       try {
+        const {email,password}=data
         console.log("data", data)
-       let resp = await this.userService.login(data);
+       let resp = await this.userService.login(email,password);
        console.log("resp",resp)
        return resp
       } catch (error) {

@@ -15,16 +15,13 @@ export class SimService {
     @InjectRepository(RidSim)
     private readonly ridSimRepository: Repository<RidSim>,
   ) {
-    // this.getSims()
-    //this.getSimDetail(39);
-    // this.deleteSim(42);
-    // this.getSimRidEntry(41)
+  
   }
 
   async getSims(): Promise<any> {
     try {
       let sim = await this.simRepository.find();
-      console.log('sim', sim);
+      //console.log('sim', sim);
       if (!sim || sim.length === 0) {
         return this.commonService.errorMessage(
           [],
@@ -53,6 +50,7 @@ export class SimService {
       let sim = await this.simRepository.findOne({
         where: { ref_id: id },
       });
+      //console.log("sim",sim)
       if (!sim || Object.keys(sim).length === 0) {
         return this.commonService.errorMessage(
           [],
@@ -104,8 +102,7 @@ export class SimService {
         );
       } else if (rid_ref_id) {
         let assign = await this.assignRidToSim(rid_ref_id, sim.ref_id);
-        // console.log("sim",sim.ref_id)
-        // console.log("rid",rid_ref_id)
+      
         if (assign.statusCode === HttpStatus.ACCEPTED) {
           return this.commonService.successMessage(
             [],
